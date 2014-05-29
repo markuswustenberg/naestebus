@@ -1,0 +1,8 @@
+language: java
+
+notifications:
+  email: 
+    - markus@wustenberg.dk
+
+env:
+  - TERM=dumb

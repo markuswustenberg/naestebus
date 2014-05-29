@@ -1,13 +1,20 @@
 version '0.1.0-SNAPSHOT'
 
 dependencies {
+    // Servlet API
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
 
+    // All-purpose library
     compile 'com.google.guava:guava:17.0'
-    compile 'org.slf4j:slf4j-api:1.7.7'
 
+    // Sane date and time handling
+    compile 'joda-time:joda-time:2.3'
+
+    // Logging
+    compile 'org.slf4j:slf4j-api:1.7.7'
     runtime 'ch.qos.logback:logback-core:1.1.2'
     runtime 'ch.qos.logback:logback-classic:1.1.2'
 
+    // Testing
     testCompile 'junit:junit:4.+'
 }

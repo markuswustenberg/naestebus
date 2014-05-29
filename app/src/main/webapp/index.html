@@ -11,35 +11,9 @@
     </style>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcT0YbVPPb_Rhqfk4CA6GxBY39IFEMxLI&sensor=false">
     </script>
-    <script type="text/javascript">
-        function initialize() {
-            var styles = [
-                {
-                    "elementType": "labels",
-                    "stylers": [
-                        { "visibility": "off" }
-                    ]
-                },{
-                    "stylers": [
-                        { "saturation": -100 }
-                    ]
-                }
-            ];
-            var mapOptions = {
-                mapTypeControlOptions: {
-                    mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'grayscale']
-                },
-                center: new google.maps.LatLng(56.172113, 10.188317),
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                zoom: 15
-            };
-            var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-
-            var mapType = new google.maps.StyledMapType(styles, { name:"Grayscale" });
-            map.mapTypes.set('grayscale', mapType);
-            map.setMapTypeId('grayscale');
-        }
-        google.maps.event.addDomListener(window, 'load', initialize);
+    <script type="text/javascript" src="/js/jquery-2.1.1.js">
+    </script>
+    <script type="text/javascript" src="/js/script.js">
     </script>
 </head>
 <body>

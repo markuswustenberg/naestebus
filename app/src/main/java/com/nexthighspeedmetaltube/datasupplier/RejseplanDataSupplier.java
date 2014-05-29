@@ -30,7 +30,7 @@ public final class RejseplanDataSupplier implements DataSupplier {
     private static final String XML_STOP_LONGITUDE = "x";
 
     @Override
-    public ImmutableList<Stop> findNearbyStops(int latitude, int longitude, int radius, int max) throws IOException {
+    public ImmutableList<Stop> getNearbyStops(int latitude, int longitude, int radius, int max) throws IOException {
         final ImmutableList.Builder<Stop> stops = ImmutableList.builder();
 
         try {

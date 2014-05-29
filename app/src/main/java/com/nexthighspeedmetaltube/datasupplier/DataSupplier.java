@@ -20,5 +20,5 @@ public interface DataSupplier {
      * @return An {@link com.google.common.collect.ImmutableList} of {@link com.nexthighspeedmetaltube.model.Stop}s, ordered by proximity.
      * @throws IOException If an error occurs searching for stops.
      */
-    ImmutableList<Stop> findNearbyStops(int latitude, int longitude, int radius, int max) throws IOException;
+    ImmutableList<Stop> getNearbyStops(int latitude, int longitude, int radius, int max) throws IOException;
 }

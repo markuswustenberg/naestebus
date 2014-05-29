@@ -42,7 +42,7 @@ public class TestRejseplanDataSupplier {
     public void testFindStops() throws IOException {
         // Uber office is approximately at 56.1726287,10.1869956
         // Test only a simple case: http://xmlopen.rejseplanen.dk/bin/rest.exe/stopsNearby?coordX=10186995&coordY=56172628&maxRadius=1000&maxNumber=2
-        ImmutableList<Stop> stops = dataSupplier.findNearbyStops(UBER_OFFICE_LATITUDE, UBER_OFFICE_LONGITUDE, NEARBY_STOPS_RADIUS, NEARBY_STOPS_STOP_COUNT);
+        ImmutableList<Stop> stops = dataSupplier.getNearbyStops(UBER_OFFICE_LATITUDE, UBER_OFFICE_LONGITUDE, NEARBY_STOPS_RADIUS, NEARBY_STOPS_STOP_COUNT);
 
         assertNotNull(stops);
         assertEquals(NEARBY_STOPS_STOP_COUNT, stops.size());

@@ -4,8 +4,6 @@ import com.nexthighspeedmetaltube.model.Stop;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests a {@link com.nexthighspeedmetaltube.model.Stop}.
@@ -15,11 +13,15 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestStop {
 
-    // TODO: Not yet sure what the ID looks like, check spec.
     private static final String STOP_ID = "8f943f9034";
     private static final String STOP_NAME = "Street Station";
     private static final int STOP_LATITUDE = 56000000;
     private static final int STOP_LONGITUDE = 10000000;
+
+    private static final int ILLEGAL_LATITUDE_MIN = -90000001;
+    private static final int ILLEGAL_LATITUDE_MAX = 90000001;
+    private static final int ILLEGAL_LONGITUDE_MIN = -180000001;
+    private static final int ILLEGAL_LONGITUDE_MAX = 180000001;
 
     @Test
     public void testBasicStop() {
@@ -31,20 +33,9 @@ public class TestStop {
                 .build();
 
         assertEquals(STOP_ID, stop.getId());
-        assertTrue(stop.hasName());
         assertEquals(STOP_NAME, stop.getName());
         assertEquals(STOP_LATITUDE, stop.getLatitude());
         assertEquals(STOP_LONGITUDE, stop.getLongitude());
-    }
-
-    @Test
-    public void testNoNameStop() {
-        Stop stop = Stop.newBuilder()
-                .setId(STOP_ID)
-                .setLatitude(STOP_LATITUDE)
-                .setLongitude(STOP_LONGITUDE)
-                .build();
-        assertFalse(stop.hasName());
     }
 
     @Test(expected = NullPointerException.class)
@@ -59,27 +50,37 @@ public class TestStop {
 
     @Test(expected = IllegalArgumentException.class)
     public void stopLatitudeMustBeInRange() {
-        Stop.newBuilder().setLatitude(-90000001);
+        Stop.newBuilder().setLatitude(ILLEGAL_LATITUDE_MIN);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void stopLatitudeMustBeInRange2() {
-        Stop.newBuilder().setLatitude(90000001);
+        Stop.newBuilder().setLatitude(ILLEGAL_LATITUDE_MAX);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void stopLongitudeMustBeInRange() {
-        Stop.newBuilder().setLatitude(-180000001);
+        Stop.newBuilder().setLatitude(ILLEGAL_LONGITUDE_MIN);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void stopLongitudeMustBeInRange2() {
-        Stop.newBuilder().setLatitude(180000001);
+        Stop.newBuilder().setLatitude(ILLEGAL_LONGITUDE_MAX);
     }
 
     @Test(expected = IllegalStateException.class)
     public void stopMustHaveId() {
         Stop.newBuilder()
+                .setName(STOP_NAME)
+                .setLatitude(STOP_LATITUDE)
+                .setLongitude(STOP_LONGITUDE)
+                .build();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void stopMustHaveName() {
+        Stop.newBuilder()
+                .setId(STOP_ID)
                 .setLatitude(STOP_LATITUDE)
                 .setLongitude(STOP_LONGITUDE)
                 .build();
@@ -89,6 +90,7 @@ public class TestStop {
     public void stopMustHaveLatitude() {
         Stop.newBuilder()
                 .setId(STOP_ID)
+                .setName(STOP_NAME)
                 .setLongitude(STOP_LONGITUDE)
                 .build();
     }
@@ -97,6 +99,7 @@ public class TestStop {
     public void stopMustHaveLongitude() {
         Stop.newBuilder()
                 .setId(STOP_ID)
+                .setName(STOP_NAME)
                 .setLatitude(STOP_LATITUDE)
                 .build();
     }

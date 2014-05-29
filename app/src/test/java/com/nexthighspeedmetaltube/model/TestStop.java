@@ -1,6 +1,5 @@
-package com.nexthighspeedmetaltube;
+package com.nexthighspeedmetaltube.model;
 
-import com.nexthighspeedmetaltube.model.Stop;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

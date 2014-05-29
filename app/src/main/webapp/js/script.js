@@ -1,4 +1,6 @@
 var markers = [];
+var meMarker = null;
+var map;
 
 function initialize() {
     var styles = [
@@ -21,50 +23,64 @@ function initialize() {
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         zoom: 15
     };
-    var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+    map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 
     var mapType = new google.maps.StyledMapType(styles, { name:"Grayscale" });
     map.mapTypes.set('grayscale', mapType);
     map.setMapTypeId('grayscale');
 
-    findLocationAndCenter(map);
-
-    addIdleEventListener(map);
+    findLocationAndCenter();
 }
 
-function findLocationAndCenter(map) {
+function findLocationAndCenter() {
     // Find current location if possible
     if(navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
             var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             map.setCenter(pos);
+            addMeMarker(pos);
         });
+    } else {
+        // Set marker at current map center if no geolocation possible
+        addMeMarker(map.getCenter());
     }
 }
 
-function addIdleEventListener(map) {
-    // Add a listener to when map is idle after movement
-    google.maps.event.addListener(map, 'idle', function() {
+function addMeMarker(position) {
+    meMarker = new google.maps.Marker({
+        position: position,
+        map: map,
+        icon: location.protocol + '//' + location.hostname + "/img/littleperson.png",
+        draggable: true
+    });
+    fetchStops(position);
+    addPositionChangedListener();
+}
+
+function addPositionChangedListener() {
+    // Add position listener
+    google.maps.event.addListener(meMarker, 'dragend', function() {
+        var position = meMarker.getPosition();
+        map.panTo(position);
+        fetchStops(position);
+    });
+}
+
+function fetchStops(position) {
+    // Fetch and add stop markers
+    $.getJSON(location.protocol + '//' + location.hostname + "/stops?latitude=" + ((position.lat() * 1000000) | 0) + "&longitude=" + ((position.lng() * 1000000) | 0) + "&radius=1000&max=20", function(stops) {
         // Clear previous stop markers
         markers.forEach(function(marker) {
             marker.setMap(null);
         });
 
-        // Get new center
-        var center = map.getCenter();
-
-        // Add "me" marker
-        // See https://developers.google.com/chart/image/docs/gallery/dynamic_icons#icon_list
-        markers.push(new google.maps.Marker({position: center, map: map, icon: "https://chart.googleapis.com/chart?chst=d_map_pin_icon&chld=glyphish_walk%7CFF0000"}));
-
-        console.log("test");
-
-        // Fetch and add stop markers
-        $.getJSON(location.protocol + '//' + location.hostname + "/stops?latitude=" + ((center.lat() * 1000000) | 0) + "&longitude=" + ((center.lng() * 1000000) | 0) + "&radius=1000&max=10", function(stops) {
-            stops.forEach(function(stop) {
-                var position = new google.maps.LatLng(stop.latitude / 1000000, stop.longitude / 1000000);
-                markers.push(new google.maps.Marker({position: position, map: map, icon: "https://chart.googleapis.com/chart?chst=d_map_pin_icon&chld=star%7C00FF00"}));
-            });
+        stops.forEach(function(stop) {
+            var stopPosition = new google.maps.LatLng(stop.latitude / 1000000, stop.longitude / 1000000);
+            markers.push(new google.maps.Marker({
+                position: stopPosition,
+                map: map,
+                icon: location.protocol + '//' + location.hostname + "/img/littlebus.png"
+            }));
         });
     });
 }

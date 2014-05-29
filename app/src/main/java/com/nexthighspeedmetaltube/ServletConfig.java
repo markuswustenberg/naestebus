@@ -26,6 +26,7 @@ public class ServletConfig extends GuiceServletContextListener {
             @Override
             protected void configureServlets() {
                 serve("/stops").with(StopsServlet.class);
+                serve("/departures").with(DeparturesServlet.class);
 
                 bind(DataSupplier.class).to(RejseplanDataSupplier.class);
             }

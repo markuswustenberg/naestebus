@@ -77,7 +77,7 @@ public class TestRejseplanDataSupplier {
         // We need an id that changes frequently according to spec
         ImmutableList<Stop> stops = dataSupplier.getNearbyStops(UBER_OFFICE_LATITUDE, UBER_OFFICE_LONGITUDE, NEARBY_STOPS_RADIUS, DEPARTURES_STOP_COUNT);
 
-        ImmutableList<Departure> departures = dataSupplier.getNextDepartures(stops.get(0), DEPARTURES_TIME);
+        ImmutableList<Departure> departures = dataSupplier.getNextDepartures(stops.get(0).getId(), DEPARTURES_TIME);
 
         // Test a few
         Departure departure1 = departures.get(0);

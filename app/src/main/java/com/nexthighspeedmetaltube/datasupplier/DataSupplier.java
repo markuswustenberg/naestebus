@@ -26,10 +26,10 @@ public interface DataSupplier {
 
     /**
      * Get next departures based on certain search criteria. Departures are returned chronologically.
-     * @param stop The stop to lookup departures at.
+     * @param stopId The stop id to lookup departures from.
      * @param time The time to lookup departures from.
      * @return An {@link com.google.common.collect.ImmutableList} of {@link com.nexthighspeedmetaltube.model.Departure}s, ordered chronologically.
      * @throws IOException If an error occurs getting departure information.
      */
-    ImmutableList<Departure> getNextDepartures(Stop stop, ReadableDateTime time) throws IOException;
+    ImmutableList<Departure> getNextDepartures(String stopId, ReadableDateTime time) throws IOException;
 }

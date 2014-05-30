@@ -83,14 +83,29 @@ Stop.prototype.updateAndShowInfoWindow = function() {
 
 function initialize() {
     var map = new google.maps.Map(document.getElementById("map-canvas"), {
-        mapTypeControlOptions: {
-            mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'grayscale']
-        },
+        panControl: false,
+        zoomControl: false,
+        mapTypeControl: false,
+        streetViewControl: false,
+        scaleControl: false,
+        overviewMapControl: false,
         center: new google.maps.LatLng(56.172113, 10.188317),
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         zoom: 15
     });
-    map.mapTypes.set('grayscale', new google.maps.StyledMapType([{stylers: [{saturation: -100}]}], {name: "Gray"}));
+    // See http://gmaps-samples-v3.googlecode.com/svn/trunk/styledmaps/wizard/index.html for styles
+    map.mapTypes.set('grayscale', new google.maps.StyledMapType([
+        {
+            "stylers": [
+                { "saturation": -100 }
+            ]
+        },{
+            "featureType": "transit.station.bus",
+            "stylers": [
+                { "visibility": "off" }
+            ]
+        }
+    ], {name: "Gray"}));
     map.setMapTypeId('grayscale');
 
     // Close stop info windows if clicked outside

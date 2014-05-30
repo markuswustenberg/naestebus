@@ -1,4 +1,3 @@
-
 var app = {
     ROOT: location.protocol + '//' + location.hostname,
     MAP_CENTER: new google.maps.LatLng(56.172113, 10.188317),
@@ -6,14 +5,40 @@ var app = {
     ME_INFO_WINDOW_CONTENT: 'You can move me!',
     ME_ICON: "/img/littleperson.png",
 
-    STOP_ICON: "/img/littlebus.png",
-
     map: null,
     infoWindow: new google.maps.InfoWindow(),
     me: {
         marker: null
     },
     stops: {}
+}
+
+function Stop(data) {
+    this.data = data;
+    this.marker = new google.maps.Marker({
+        position: new google.maps.LatLng(data.latitude / 1000000, data.longitude / 1000000),
+        title: data.name,
+        map: app.map,
+        icon: app.ROOT + "/img/littlebus.png"
+    });
+    var self = this;
+    google.maps.event.addListener(this.marker, 'click', function() {
+        self.updateAndShowInfoWindow();
+    });
+}
+Stop.prototype.updateAndShowInfoWindow = function() {
+    var self = this;
+    $.getJSON(app.ROOT + "/departures?stopId=" + this.data.id + '&max=5', function(departures) {
+        var content = '';
+        departures.forEach(function(departure) {
+            content += '<p><strong>' + departure.name + '</strong> ' + departure.time;
+            if (departure.hasDirection) {
+                content += ' → ' + departure.direction;
+            }
+            content += '</p>';
+        });
+        updateInfoWindow(self.marker, content);
+    });
 }
 
 function initialize() {
@@ -104,34 +129,8 @@ function fetchStops(position) {
                 return;
             }
 
-            // Add marker
-            var stopPosition = new google.maps.LatLng(datum.latitude / 1000000, datum.longitude / 1000000);
-            var marker = new google.maps.Marker({
-                position: stopPosition,
-                title: datum.name,
-                map: app.map,
-                icon: app.ROOT + app.STOP_ICON
-            });
-
-            app.stops[key] = marker;
-            google.maps.event.addListener(marker, 'click', function() {
-                showBusMarkerInfoWindow(datum, marker);
-            });
+            app.stops[key] = new Stop(datum);
         });
-    });
-}
-
-function showBusMarkerInfoWindow(stop, marker) {
-    $.getJSON(app.ROOT + "/departures?stopId=" + stop.id + '&max=5', function(departures) {
-        var content = '';
-        departures.forEach(function(departure) {
-            content += '<p><strong>' + departure.name + '</strong> ' + departure.time;
-            if (departure.hasDirection) {
-                content += ' → ' + departure.direction;
-            }
-            content += '</p>';
-        });
-        updateInfoWindow(marker, content);
     });
 }
 

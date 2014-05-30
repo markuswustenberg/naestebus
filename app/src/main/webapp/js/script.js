@@ -38,7 +38,7 @@ Me.prototype.findStops = function() {
     $.getJSON("/stops?latitude=" + ((position.lat() * 1000000) | 0) + "&longitude=" + ((position.lng() * 1000000) | 0) + "&radius=1000&max=5", function(stops) {
         stops.forEach(function(stop) {
             // Check if the marker is already present
-            var key = stop.latitude.toString() + stop.longitude.toString();
+            var key = stop.coordinate.latitude.toString() + stop.coordinate.longitude.toString();
             if (key in app.stops) {
                 return;
             }
@@ -51,7 +51,7 @@ function Stop(map, data) {
     this.map = map;
     this.data = data;
     this.marker = new google.maps.Marker({
-        position: new google.maps.LatLng(data.latitude / 1000000, data.longitude / 1000000),
+        position: new google.maps.LatLng(data.coordinate.latitude / 1000000, data.coordinate.longitude / 1000000),
         title: data.name,
         map: map,
         icon: "/img/littlebus.png"

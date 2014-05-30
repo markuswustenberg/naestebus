@@ -50,7 +50,7 @@ public class DeparturesServlet extends HttpServlet {
     private final DataSupplier dataSupplier;
 
     @Inject
-    DeparturesServlet(DataSupplier dataSupplier) {
+    DeparturesServlet(@DataSupplier.Caching DataSupplier dataSupplier) {
         this.dataSupplier = dataSupplier;
     }
 

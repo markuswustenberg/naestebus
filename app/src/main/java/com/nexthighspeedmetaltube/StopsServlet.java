@@ -49,7 +49,7 @@ public class StopsServlet extends HttpServlet {
     private final DataSupplier dataSupplier;
 
     @Inject
-    StopsServlet(DataSupplier dataSupplier) {
+    StopsServlet(@DataSupplier.Caching DataSupplier dataSupplier) {
         this.dataSupplier = dataSupplier;
     }
 

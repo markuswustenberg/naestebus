@@ -1,11 +1,17 @@
 package com.nexthighspeedmetaltube.datasupplier;
 
 import com.google.common.collect.ImmutableList;
+import com.google.inject.BindingAnnotation;
 import com.nexthighspeedmetaltube.model.Coordinate;
 import com.nexthighspeedmetaltube.model.Departure;
 import com.nexthighspeedmetaltube.model.Stop;
 
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * A {@code DataSupplier} supplies nearby {@link com.nexthighspeedmetaltube.model.Stop}s and {@link com.nexthighspeedmetaltube.model.Departure}s.
@@ -31,4 +37,7 @@ public interface DataSupplier {
      * @throws IOException If an error occurs getting departure information.
      */
     ImmutableList<Departure> getNextDepartures(String stopId) throws IOException;
+
+    @BindingAnnotation @Target({ FIELD, PARAMETER, METHOD }) @Retention(RUNTIME)
+    public @interface Caching {}
 }

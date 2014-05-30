@@ -2,10 +2,13 @@ package com.nexthighspeedmetaltube.datasupplier;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.nexthighspeedmetaltube.model.Coordinate;
 import com.nexthighspeedmetaltube.model.Departure;
 import com.nexthighspeedmetaltube.model.Stop;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Map;
@@ -23,10 +26,13 @@ import java.util.Map;
 @Singleton
 public final class CachingDataSupplier implements DataSupplier {
 
+    private static final Logger log = LoggerFactory.getLogger(CachingDataSupplier.class);
+
     private final DataSupplier dataSupplier;
 
     private final Map<String, ImmutableList<Departure>> cache = Maps.newConcurrentMap();
 
+    @Inject
     public CachingDataSupplier(DataSupplier dataSupplier) {
         this.dataSupplier = dataSupplier;
     }
@@ -43,13 +49,16 @@ public final class CachingDataSupplier implements DataSupplier {
 
         // If cache is too old (not in the future) or we have a cache miss, do caching and return
         if ((cached != null && !cached.get(0).getTime().isAfterNow()) || cached == null) {
+            log.trace("Cache miss for stop id {}.", stopId);
             ImmutableList<Departure> departures = dataSupplier.getNextDepartures(stopId);
             if (!departures.isEmpty()) {
+                log.trace("Caching stop id {} until {}.", stopId, departures.get(0).getTime());
                 cache.put(stopId, departures);
             }
             return departures;
         }
 
+        log.trace("Cache hit for stop id {}.", stopId);
         return cached;
     }
 }

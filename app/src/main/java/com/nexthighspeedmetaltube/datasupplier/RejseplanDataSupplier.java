@@ -2,9 +2,11 @@ package com.nexthighspeedmetaltube.datasupplier;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Closer;
+import com.google.inject.Singleton;
 import com.nexthighspeedmetaltube.model.Coordinate;
 import com.nexthighspeedmetaltube.model.Departure;
 import com.nexthighspeedmetaltube.model.Stop;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.joda.time.ReadableDateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -29,6 +31,7 @@ import java.net.URLConnection;
  * <p>
  * This class is thread-safe.
  */
+@Singleton
 public final class RejseplanDataSupplier implements DataSupplier {
 
     private static final String BASE_URL = "http://xmlopen.rejseplanen.dk/bin/rest.exe/";
@@ -83,17 +86,18 @@ public final class RejseplanDataSupplier implements DataSupplier {
     }
 
     @Override
-    public ImmutableList<Departure> getNextDepartures(String stopId, final ReadableDateTime time) throws IOException {
+    public ImmutableList<Departure> getNextDepartures(String stopId) throws IOException {
         final ImmutableList.Builder<Departure> departures = ImmutableList.builder();
 
-        connectAndParse(BASE_URL + String.format(DEPARTURES_URL, stopId, DATE_FORMATTER.print(time), TIME_FORMATTER.print(time)), new DefaultHandler() {
+        final DateTime now = DateTime.now();
+        connectAndParse(BASE_URL + String.format(DEPARTURES_URL, stopId, DATE_FORMATTER.print(now), TIME_FORMATTER.print(now)), new DefaultHandler() {
             @Override
             public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
                 if (!XML_DEPARTURE.equals(qName)) {
                     return;
                 }
 
-                Departure departure = parseDeparture(attributes, time);
+                Departure departure = parseDeparture(attributes, now);
                 departures.add(departure);
             }
         });

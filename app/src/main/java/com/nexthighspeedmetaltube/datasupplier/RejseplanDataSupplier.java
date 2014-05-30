@@ -56,10 +56,10 @@ public final class RejseplanDataSupplier implements DataSupplier {
     private static final Logger log = LoggerFactory.getLogger(RejseplanDataSupplier.class);
 
     @Override
-    public ImmutableList<Stop> getNearbyStops(int latitude, int longitude, int radius, int max) throws IOException {
+    public ImmutableList<Stop> getNearbyStops(Coordinate coordinate, int radius, int max) throws IOException {
         final ImmutableList.Builder<Stop> stops = ImmutableList.builder();
 
-        connectAndParse(BASE_URL + String.format(NEARBY_STOPS_URL, longitude, latitude, radius, max), new DefaultHandler() {
+        connectAndParse(BASE_URL + String.format(NEARBY_STOPS_URL, coordinate.getLongitude(), coordinate.getLatitude(), radius, max), new DefaultHandler() {
             @Override
             public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
                 if (!XML_STOP.equals(qName)) {

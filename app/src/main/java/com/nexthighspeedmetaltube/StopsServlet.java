@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.nexthighspeedmetaltube.datasupplier.DataSupplier;
+import com.nexthighspeedmetaltube.model.Coordinate;
 import com.nexthighspeedmetaltube.model.Stop;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +43,8 @@ public class StopsServlet extends HttpServlet {
             return;
         }
 
-        ImmutableList<Stop> stops = dataSupplier.getNearbyStops(Integer.parseInt(latitude), Integer.parseInt(longitude), Integer.parseInt(radius), Integer.parseInt(max));
+        Coordinate coordinate = new Coordinate(Integer.parseInt(latitude), Integer.parseInt(longitude));
+        ImmutableList<Stop> stops = dataSupplier.getNearbyStops(coordinate, Integer.parseInt(radius), Integer.parseInt(max));
 
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();

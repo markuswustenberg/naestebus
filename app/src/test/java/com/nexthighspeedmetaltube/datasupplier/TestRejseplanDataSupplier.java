@@ -18,8 +18,7 @@ import static org.junit.Assert.assertNotNull;
  */
 public class TestRejseplanDataSupplier {
 
-    private static final int UBER_OFFICE_LATITUDE = 56172628;
-    private static final int UBER_OFFICE_LONGITUDE = 10186995;
+    private static final Coordinate UBER_OFFICE_COORDINATE = new Coordinate(56172628, 10186995);
     private static final int NEARBY_STOPS_RADIUS = 1000;
     private static final int NEARBY_STOPS_STOP_COUNT = 2;
 
@@ -51,7 +50,7 @@ public class TestRejseplanDataSupplier {
     public void getStops() throws IOException {
         // Uber office is approximately at 56.1726287,10.1869956
         // Test only a simple case: http://xmlopen.rejseplanen.dk/bin/rest.exe/stopsNearby?coordX=10186995&coordY=56172628&maxRadius=1000&maxNumber=2
-        ImmutableList<Stop> stops = dataSupplier.getNearbyStops(UBER_OFFICE_LATITUDE, UBER_OFFICE_LONGITUDE, NEARBY_STOPS_RADIUS, NEARBY_STOPS_STOP_COUNT);
+        ImmutableList<Stop> stops = dataSupplier.getNearbyStops(UBER_OFFICE_COORDINATE, NEARBY_STOPS_RADIUS, NEARBY_STOPS_STOP_COUNT);
 
         assertNotNull(stops);
         assertEquals(NEARBY_STOPS_STOP_COUNT, stops.size());
@@ -72,7 +71,7 @@ public class TestRejseplanDataSupplier {
     @Test
     public void getDepartures() throws IOException {
         // We need an id that changes frequently according to spec
-        ImmutableList<Stop> stops = dataSupplier.getNearbyStops(UBER_OFFICE_LATITUDE, UBER_OFFICE_LONGITUDE, NEARBY_STOPS_RADIUS, DEPARTURES_STOP_COUNT);
+        ImmutableList<Stop> stops = dataSupplier.getNearbyStops(UBER_OFFICE_COORDINATE, NEARBY_STOPS_RADIUS, DEPARTURES_STOP_COUNT);
 
         ImmutableList<Departure> departures = dataSupplier.getNextDepartures(stops.get(0).getId(), DEPARTURES_TIME);
 

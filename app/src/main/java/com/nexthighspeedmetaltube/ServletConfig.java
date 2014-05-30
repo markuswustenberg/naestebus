@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
  */
 public class ServletConfig extends GuiceServletContextListener {
 
+    public static final String MIME_RESPONSE_TYPE = "application/json";
+
     private static final Logger log = LoggerFactory.getLogger(ServletConfig.class);
 
     public ServletConfig() {

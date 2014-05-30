@@ -30,10 +30,20 @@ public final class Coordinate {
         this.longitude = longitude;
     }
 
+    /**
+     * Get the latitude as an integer. Convert to WGS84 by dividing by a million (1000000).
+     *
+     * @return latitude as integer
+     */
     public int getLatitude() {
         return latitude;
     }
 
+    /**
+     * Get the longitude as an integer. Convert to WGS84 by dividing by a million (1000000).
+     *
+     * @return longitude as integer
+     */
     public int getLongitude() {
         return longitude;
     }

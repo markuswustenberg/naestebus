@@ -5,7 +5,7 @@ import com.google.common.base.Preconditions;
 
 /**
  * A {@code Stop} is somewhere where some form of public transport can stop to pick up passengers.
- * It has a system id, a friendly name, and coordinates in WGS84 format (represented as integers).
+ * Its component parts are a system id, a friendly name, and a {@link com.nexthighspeedmetaltube.model.Coordinate}.
  * <p>
  * This class is immutable and thread-safe.
  */

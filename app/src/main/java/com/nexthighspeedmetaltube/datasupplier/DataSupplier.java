@@ -16,7 +16,7 @@ public interface DataSupplier {
     /**
      * Get nearby stops based on certain search criteria. Stops are returned in order of proximity to the latitude/longitude given.
      *
-     * @param coordinate Coordinate.
+     * @param coordinate The {@link com.nexthighspeedmetaltube.model.Coordinate} to search around.
      * @param radius Radius in meters.
      * @param max Max numbers of stops to return.
      * @return An {@link com.google.common.collect.ImmutableList} of {@link com.nexthighspeedmetaltube.model.Stop}s, ordered by proximity.
@@ -26,6 +26,7 @@ public interface DataSupplier {
 
     /**
      * Get next departures based on certain search criteria. Departures are returned chronologically.
+     *
      * @param stopId The stop id to lookup departures from.
      * @param time The time to lookup departures from.
      * @return An {@link com.google.common.collect.ImmutableList} of {@link com.nexthighspeedmetaltube.model.Departure}s, ordered chronologically.

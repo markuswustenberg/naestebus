@@ -18,7 +18,21 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * A {@code StopsServlet} serves nearby {@link com.nexthighspeedmetaltube.model.Stop}s in JSON format.
+ * A {@code StopsServlet} serves nearby {@link com.nexthighspeedmetaltube.model.Stop}s.
+ * <p>
+ * Retrieve nearby stops using HTTP GET, given the parameters {@code latitude}, {@code longitude}, {@code radius}, and {@code max}. The response is in JSON format.
+ * <p>
+ * {@code latitude} is the latitude in WGS84 format, except that it is first multiplied by a million (1000000) and then converted to an integer.
+ * {@code longitude} is the longitude in WGS84 format, likewise except that it is first multiplied by a million (1000000) and then converted to an integer.
+ * {@code radius} gives the search radius in meters. The range is unspecified.
+ * {@code max} is the maximum number of stops returned. Note that there is an unspecified internal maximum also.
+ * <p>
+ * Example usage:
+ * <p>
+ * <code>$ curl "http://localhost:8080/stops?latitude=56172628&longitude=10186995&radius=1000&max=2"</code>
+ * <p>
+ * <code>[{"id":"751464200","name":"Paludan-Müllers Vej/Ekkodalen (Aarhus)","coordinate":{"latitude":56172728,"longitude":10183438}},
+ * {"id":"751464100","name":"Paludan-Müllers Vej/Åbogade (Aarhus)","coordinate":{"latitude":56170247,"longitude":10186692}}]</code>
  */
 @Singleton
 public class StopsServlet extends HttpServlet {
@@ -28,7 +42,7 @@ public class StopsServlet extends HttpServlet {
     private final DataSupplier dataSupplier;
 
     @Inject
-    public StopsServlet(DataSupplier dataSupplier) {
+    StopsServlet(DataSupplier dataSupplier) {
         this.dataSupplier = dataSupplier;
     }
 
@@ -46,7 +60,7 @@ public class StopsServlet extends HttpServlet {
         Coordinate coordinate = new Coordinate(Integer.parseInt(latitude), Integer.parseInt(longitude));
         ImmutableList<Stop> stops = dataSupplier.getNearbyStops(coordinate, Integer.parseInt(radius), Integer.parseInt(max));
 
-        response.setContentType("application/json");
+        response.setContentType(ServletConfig.MIME_RESPONSE_TYPE);
         PrintWriter writer = response.getWriter();
         writer.write(new Gson().toJson(stops));
         writer.flush();

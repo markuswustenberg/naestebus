@@ -2,14 +2,9 @@ var app = {
     ROOT: location.protocol + '//' + location.hostname,
     MAP_CENTER: new google.maps.LatLng(56.172113, 10.188317),
 
-    ME_INFO_WINDOW_CONTENT: 'You can move me!',
-    ME_ICON: "/img/littleperson.png",
-
     map: null,
     infoWindow: new google.maps.InfoWindow(),
-    me: {
-        marker: null
-    },
+    me: null,
     stops: {}
 }
 
@@ -41,6 +36,36 @@ Stop.prototype.updateAndShowInfoWindow = function() {
     });
 }
 
+function Me(position) {
+    // Add marker
+    this.marker = new google.maps.Marker({
+        position: position,
+        map: app.map,
+        icon: app.ROOT + "/img/littleperson.png",
+        draggable: true
+    });
+
+    // Add info window telling the user this marker can be moved
+    updateInfoWindow(this.marker, 'You can move me!');
+
+    // Add position listener
+    var self = this;
+    google.maps.event.addListener(this.marker, 'dragend', function() {
+        self.onPositionUpdate();
+    });
+
+    this.onPositionUpdate();
+}
+Me.prototype.setPosition = function(position) {
+    this.marker.position = position;
+    this.onPositionUpdate();
+}
+Me.prototype.onPositionUpdate = function() {
+    var position = this.marker.getPosition();
+    app.map.panTo(position);
+    fetchStops(position);
+}
+
 function initialize() {
     var mapOptions = {
         mapTypeControlOptions: {
@@ -67,49 +92,16 @@ function initialize() {
         app.infoWindow.close();
     });
 
-    findLocationAndCenter();
-}
+    // Add me
+    app.me = new Me(app.map.getCenter());
 
-function findLocationAndCenter() {
-    // Find current location if possible
-    if(navigator.geolocation) {
+    // Find current location if possible and center
+    if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
             var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            app.map.setCenter(pos);
-            addMeMarker(pos);
+            app.me.setPosition(pos);
         });
-    } else {
-        // Set marker at current map center if no geolocation possible
-        addMeMarker(app.map.getCenter());
     }
-}
-
-function addMeMarker(position) {
-    // Add marker
-    app.me.marker = new google.maps.Marker({
-        position: position,
-        map: app.map,
-        icon: app.ROOT + app.ME_ICON,
-        draggable: true
-    });
-
-    // Add info window telling the user this marker can be moved
-    updateInfoWindow(app.me.marker, app.ME_INFO_WINDOW_CONTENT);
-
-    // Fetch stops immediately
-    fetchStops(position);
-
-    // Add listener for when app.me.marker is moved
-    addMyPositionChangedListener();
-}
-
-function addMyPositionChangedListener() {
-    // Add position listener
-    google.maps.event.addListener(app.me.marker, 'dragend', function() {
-        var position = app.me.marker.getPosition();
-        app.map.panTo(position);
-        fetchStops(position);
-    });
 }
 
 function updateInfoWindow(marker, content) {

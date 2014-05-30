@@ -1,5 +1,3 @@
-var ROOT = location.protocol + '//' + location.hostname;
-
 var app = {
     stops: {}
 }
@@ -10,7 +8,7 @@ function Me(map) {
     this.marker = new google.maps.Marker({
         position: map.getCenter(),
         map: map,
-        icon: ROOT + "/img/littleperson.png",
+        icon: "/img/littleperson.png",
         draggable: true
     });
 
@@ -37,7 +35,7 @@ Me.prototype.findStops = function() {
     // Find and add stop markers
     var position = this.marker.getPosition();
     var map = this.map;
-    $.getJSON(ROOT + "/stops?latitude=" + ((position.lat() * 1000000) | 0) + "&longitude=" + ((position.lng() * 1000000) | 0) + "&radius=1000&max=5", function(stops) {
+    $.getJSON("/stops?latitude=" + ((position.lat() * 1000000) | 0) + "&longitude=" + ((position.lng() * 1000000) | 0) + "&radius=1000&max=5", function(stops) {
         stops.forEach(function(stop) {
             // Check if the marker is already present
             var key = stop.latitude.toString() + stop.longitude.toString();
@@ -56,7 +54,7 @@ function Stop(map, data) {
         position: new google.maps.LatLng(data.latitude / 1000000, data.longitude / 1000000),
         title: data.name,
         map: map,
-        icon: ROOT + "/img/littlebus.png"
+        icon: "/img/littlebus.png"
     });
     var self = this;
     google.maps.event.addListener(this.marker, 'click', function() {
@@ -66,7 +64,7 @@ function Stop(map, data) {
 Stop.infoWindow = new google.maps.InfoWindow();
 Stop.prototype.updateAndShowInfoWindow = function() {
     var self = this;
-    $.getJSON(ROOT + "/departures?stopId=" + this.data.id + '&max=5', function(departures) {
+    $.getJSON("/departures?stopId=" + this.data.id + '&max=5', function(departures) {
         var content = '';
         departures.forEach(function(departure) {
             content += '<p><strong>' + departure.name + '</strong> ' + departure.time;

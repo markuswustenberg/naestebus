@@ -2,6 +2,7 @@ package com.nexthighspeedmetaltube.datasupplier;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Closer;
+import com.nexthighspeedmetaltube.model.Coordinate;
 import com.nexthighspeedmetaltube.model.Departure;
 import com.nexthighspeedmetaltube.model.Stop;
 import org.joda.time.LocalDateTime;
@@ -77,8 +78,7 @@ public final class RejseplanDataSupplier implements DataSupplier {
         return Stop.newBuilder()
                 .setId(attributes.getValue(XML_STOP_ID))
                 .setName(attributes.getValue(XML_STOP_NAME))
-                .setLatitude(Integer.parseInt(attributes.getValue(XML_STOP_LATITUDE)))
-                .setLongitude(Integer.parseInt(attributes.getValue(XML_STOP_LONGITUDE)))
+                .setCoordinate(new Coordinate(Integer.parseInt(attributes.getValue(XML_STOP_LATITUDE)), Integer.parseInt(attributes.getValue(XML_STOP_LONGITUDE))))
                 .build();
     }
 

@@ -1,6 +1,7 @@
 package com.nexthighspeedmetaltube.datasupplier;
 
 import com.google.common.collect.ImmutableList;
+import com.nexthighspeedmetaltube.model.Coordinate;
 import com.nexthighspeedmetaltube.model.Departure;
 import com.nexthighspeedmetaltube.model.Stop;
 import org.joda.time.DateTime;
@@ -26,12 +27,10 @@ public class TestRejseplanDataSupplier {
     private static final DateTime DEPARTURES_TIME = new DateTime("2014-05-30T13:36:00+02:00");
 
     private static final String STOP1_NAME = "Paludan-Müllers Vej/Ekkodalen (Aarhus)";
-    private static final int STOP1_LATITUDE = 56172728;
-    private static final int STOP1_LONGITUDE = 10183438;
+    private static final Coordinate STOP1_COORDINATE = new Coordinate(56172728, 10183438);
 
     private static final String STOP2_NAME = "Paludan-Müllers Vej/Åbogade (Aarhus)";
-    private static final int STOP2_LATITUDE = 56170247;
-    private static final int STOP2_LONGITUDE = 10186692;
+    private static final Coordinate STOP2_COORDINATE = new Coordinate(56170247, 10186692);
 
     private static final String DEPARTURE1_NAME = "Bus 2A";
     private static final DateTime DEPARTURE1_TIME = new DateTime("2014-05-30T13:37:00+02:00");
@@ -61,15 +60,13 @@ public class TestRejseplanDataSupplier {
         // Stops might be tested, but their ids change frequently!
         //assertEquals(STOP1_ID, stop1.getId());
         assertEquals(STOP1_NAME, stop1.getName());
-        assertEquals(STOP1_LATITUDE, stop1.getLatitude());
-        assertEquals(STOP1_LONGITUDE, stop1.getLongitude());
+        assertEquals(STOP1_COORDINATE, stop1.getCoordinate());
 
         Stop stop2 = stops.get(1);
         // Stops might be tested, but their ids change frequently!
         //assertEquals(STOP2_ID, stop2.getId());
         assertEquals(STOP2_NAME, stop2.getName());
-        assertEquals(STOP2_LATITUDE, stop2.getLatitude());
-        assertEquals(STOP2_LONGITUDE, stop2.getLongitude());
+        assertEquals(STOP2_COORDINATE, stop2.getCoordinate());
     }
 
     @Test

@@ -47,13 +47,23 @@ function findLocationAndCenter() {
 }
 
 function addMeMarker(position) {
+    // Add marker
     meMarker = new google.maps.Marker({
         position: position,
         map: map,
         icon: location.protocol + '//' + location.hostname + "/img/littleperson.png",
         draggable: true
     });
+
+    // Add info window telling the user this marker can be moved
+    new google.maps.InfoWindow({
+        content: 'You can move me!'
+    }).open(map, meMarker);
+
+    // Fetch stops immediately
     fetchStops(position);
+
+    // Add listener for when meMarker is moved
     addPositionChangedListener();
 }
 

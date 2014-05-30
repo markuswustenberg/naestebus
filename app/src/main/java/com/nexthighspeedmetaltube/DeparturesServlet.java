@@ -35,13 +35,15 @@ public class DeparturesServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String stopId = request.getParameter("stopId");
+        String max = request.getParameter("max");
 
-        if (stopId == null) {
+        if (stopId == null || max == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
         ImmutableList<Departure> departures = dataSupplier.getNextDepartures(stopId, DateTime.now());
+        departures = departures.subList(0, Integer.parseInt(max));
 
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();
@@ -52,7 +54,7 @@ public class DeparturesServlet extends HttpServlet {
     private static class DateTimeSerializer implements JsonSerializer<DateTime> {
         @Override
         public JsonElement serialize(DateTime src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(src.toString());
+            return new JsonPrimitive(src.toString("HH:mm"));
         }
     }
 }

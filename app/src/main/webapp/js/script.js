@@ -1,4 +1,4 @@
-var markers = [];
+var markers = {};
 var meMarker = null;
 var map;
 
@@ -78,19 +78,21 @@ function addPositionChangedListener() {
 
 function fetchStops(position) {
     // Fetch and add stop markers
-    $.getJSON(location.protocol + '//' + location.hostname + "/stops?latitude=" + ((position.lat() * 1000000) | 0) + "&longitude=" + ((position.lng() * 1000000) | 0) + "&radius=1000&max=20", function(stops) {
-        // Clear previous stop markers
-        markers.forEach(function(marker) {
-            marker.setMap(null);
-        });
-
+    $.getJSON(location.protocol + '//' + location.hostname + "/stops?latitude=" + ((position.lat() * 1000000) | 0) + "&longitude=" + ((position.lng() * 1000000) | 0) + "&radius=1000&max=5", function(stops) {
         stops.forEach(function(stop) {
+            // Check if the marker is already present
+            var key = stop.latitude.toString() + stop.longitude.toString();
+            if (key in markers) {
+                return;
+            }
+
+            // Add marker
             var stopPosition = new google.maps.LatLng(stop.latitude / 1000000, stop.longitude / 1000000);
-            markers.push(new google.maps.Marker({
+            markers[key] = new google.maps.Marker({
                 position: stopPosition,
                 map: map,
                 icon: location.protocol + '//' + location.hostname + "/img/littlebus.png"
-            }));
+            });
         });
     });
 }

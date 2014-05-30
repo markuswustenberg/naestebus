@@ -1,7 +1,7 @@
 var app = {
     me: null,
     stops: {}
-}
+};
 
 function Me(map) {
     // Add marker
@@ -32,7 +32,7 @@ function Me(map) {
 Me.prototype.onPositionUpdate = function() {
     this.map.panTo(this.marker.getPosition());
     this.findStops();
-}
+};
 Me.prototype.findStops = function() {
     // Find and add stop markers
     var position = this.marker.getPosition();
@@ -52,13 +52,13 @@ Me.prototype.findStops = function() {
             self.showErrorInfoWindow();
         }
     });
-}
+};
 Me.prototype.showErrorInfoWindow = function() {
     clearTimeout(this.timeout);
     this.infoWindow.close();
     this.infoWindow.setContent("Sorry! There was an error finding buses. I'm officially lost.");
     this.infoWindow.open(this.map, this.marker);
-}
+};
 
 function Stop(map, data) {
     this.map = map;
@@ -97,7 +97,7 @@ Stop.prototype.updateAndShowInfoWindow = function() {
             app.me.showErrorInfoWindow();
         }
     });
-}
+};
 
 function initialize() {
     var map = new google.maps.Map(document.getElementById("map-canvas"), {
@@ -127,7 +127,7 @@ function initialize() {
     map.setMapTypeId('grayscale');
 
     // Close stop info windows if clicked outside
-    google.maps.event.addListener(map, "click", function(event) {
+    google.maps.event.addListener(map, "click", function() {
         Stop.infoWindow.close();
     });
 

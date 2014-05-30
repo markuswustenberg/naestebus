@@ -1,4 +1,5 @@
 var app = {
+    me: null,
     stops: {}
 }
 
@@ -12,15 +13,16 @@ function Me(map) {
         draggable: true
     });
 
+    var self = this;
+
     // Add info window telling the user this marker can be moved
-    var infoWindow = new google.maps.InfoWindow({content: 'You can move me!'});
-    infoWindow.open(map, this.marker);
-    setTimeout(function() {
-        infoWindow.close();
+    this.infoWindow = new google.maps.InfoWindow({content: 'You can move me!'});
+    this.infoWindow.open(map, this.marker);
+    this.timeout = setTimeout(function() {
+        self.infoWindow.close();
     }, 3000);
 
     // Add position listener
-    var self = this;
     google.maps.event.addListener(this.marker, 'dragend', function() {
         self.onPositionUpdate();
     });
@@ -34,17 +36,28 @@ Me.prototype.onPositionUpdate = function() {
 Me.prototype.findStops = function() {
     // Find and add stop markers
     var position = this.marker.getPosition();
-    var map = this.map;
-    $.getJSON("/stops?latitude=" + ((position.lat() * 1000000) | 0) + "&longitude=" + ((position.lng() * 1000000) | 0) + "&radius=1000&max=5", function(stops) {
-        stops.forEach(function(stop) {
-            // Check if the marker is already present
-            var key = stop.coordinate.latitude.toString() + stop.coordinate.longitude.toString();
-            if (key in app.stops) {
-                return;
-            }
-            app.stops[key] = new Stop(map, stop);
-        });
+    var self = this;
+    $.ajax("/stops?latitude=" + ((position.lat() * 1000000) | 0) + "&longitude=" + ((position.lng() * 1000000) | 0) + "&radius=1000&max=5", {
+        success: function(stops) {
+            stops.forEach(function(stop) {
+                // Check if the marker is already present
+                var key = stop.coordinate.latitude.toString() + stop.coordinate.longitude.toString();
+                if (key in app.stops) {
+                    return;
+                }
+                app.stops[key] = new Stop(self.map, stop);
+            });
+        },
+        error: function() {
+            self.showErrorInfoWindow();
+        }
     });
+}
+Me.prototype.showErrorInfoWindow = function() {
+    clearTimeout(this.timeout);
+    this.infoWindow.close();
+    this.infoWindow.setContent("Sorry! There was an error finding buses. I'm officially lost.");
+    this.infoWindow.open(this.map, this.marker);
 }
 
 function Stop(map, data) {
@@ -64,20 +77,25 @@ function Stop(map, data) {
 Stop.infoWindow = new google.maps.InfoWindow();
 Stop.prototype.updateAndShowInfoWindow = function() {
     var self = this;
-    $.getJSON("/departures?stopId=" + this.data.id + '&max=5', function(departures) {
-        var content = '';
-        departures.forEach(function(departure) {
-            content += '<p><strong>' + departure.name + '</strong> ' + departure.time;
-            if (departure.hasDirection) {
-                content += ' → ' + departure.direction;
-            }
-            content += '</p>';
-        });
+    $.ajax("/departures?stopId=" + this.data.id + '&max=5', {
+        success: function(departures) {
+            var content = '';
+            departures.forEach(function(departure) {
+                content += '<p><strong>' + departure.name + '</strong> ' + departure.time;
+                if (departure.hasDirection) {
+                    content += ' → ' + departure.direction;
+                }
+                content += '</p>';
+            });
 
-        // Close the previous one, set content, and open again with new content
-        Stop.infoWindow.close();
-        Stop.infoWindow.setContent(content);
-        Stop.infoWindow.open(self.map, self.marker);
+            // Close the previous one, set content, and open again with new content
+            Stop.infoWindow.close();
+            Stop.infoWindow.setContent(content);
+            Stop.infoWindow.open(self.map, self.marker);
+        },
+        error: function() {
+            app.me.showErrorInfoWindow();
+        }
     });
 }
 
@@ -117,10 +135,10 @@ function initialize() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
             map.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
-            new Me(map);
+            app.me = new Me(map);
         });
     } else {
-        new Me(map);
+        app.me = new Me(map);
     }
 }
 

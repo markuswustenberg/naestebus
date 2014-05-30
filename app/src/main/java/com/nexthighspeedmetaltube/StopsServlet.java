@@ -37,7 +37,14 @@ import java.io.PrintWriter;
 @Singleton
 public class StopsServlet extends HttpServlet {
 
+    private static final String LATITUDE_PARAMETER_NAME = "latitude";
+    private static final String LONGITUDE_PARAMETER_NAME = "longitude";
+    private static final String RADIUS_PARAMETER_NAME = "radius";
+    private static final String MAX_PARAMETER_NAME = "max";
+
     private static final Logger log = LoggerFactory.getLogger(StopsServlet.class);
+
+    private static final Gson serializer = new Gson();
 
     private final DataSupplier dataSupplier;
 
@@ -47,22 +54,48 @@ public class StopsServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String latitude = request.getParameter("latitude");
-        String longitude = request.getParameter("longitude");
-        String radius = request.getParameter("radius");
-        String max = request.getParameter("max");
+        String latitude = request.getParameter(LATITUDE_PARAMETER_NAME);
+        String longitude = request.getParameter(LONGITUDE_PARAMETER_NAME);
+        String radius = request.getParameter(RADIUS_PARAMETER_NAME);
+        String max = request.getParameter(MAX_PARAMETER_NAME);
 
-        if (latitude == null || longitude == null || radius == null || max == null) {
+        if (!checkArguments(latitude, longitude, radius, max)) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
         Coordinate coordinate = new Coordinate(Integer.parseInt(latitude), Integer.parseInt(longitude));
-        ImmutableList<Stop> stops = dataSupplier.getNearbyStops(coordinate, Integer.parseInt(radius), Integer.parseInt(max));
+        ImmutableList<Stop> stops;
+        try {
+            stops = dataSupplier.getNearbyStops(coordinate, Integer.parseInt(radius), Integer.parseInt(max));
+        } catch (IOException e) {
+            log.warn("Couldn't get nearby stops from data supplier.", e);
+            response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
+            return;
+        }
 
         response.setContentType(ServletConfig.MIME_RESPONSE_TYPE);
+        response.setCharacterEncoding(ServletConfig.CHARACTER_ENCODING);
         PrintWriter writer = response.getWriter();
-        writer.write(new Gson().toJson(stops));
+        writer.write(serializer.toJson(stops));
         writer.flush();
+    }
+
+    private boolean checkArguments(String latitude, String longitude, String radius, String max) {
+        if (latitude == null || longitude == null || radius == null || max == null) {
+            return false;
+        }
+        if (!ServletUtil.INTEGER_ONLY_PATTERN.matcher(latitude).matches() || !ServletUtil.INTEGER_ONLY_PATTERN.matcher(longitude).matches()) {
+            return false;
+        }
+        if (!ServletUtil.INTEGER_ONLY_PATTERN.matcher(radius).matches() || !ServletUtil.INTEGER_ONLY_PATTERN.matcher(max).matches()) {
+            return false;
+        }
+        int radiusInt = Integer.parseInt(radius);
+        int maxInt = Integer.parseInt(max);
+        if (radiusInt <= 0 || maxInt <= 0) {
+            return false;
+        }
+        return true;
     }
 }

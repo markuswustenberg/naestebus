@@ -1,5 +1,6 @@
 package com.nexthighspeedmetaltube;
 
+import com.google.common.base.Charsets;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 public class ServletConfig extends GuiceServletContextListener {
 
     public static final String MIME_RESPONSE_TYPE = "application/json";
+    public static final String CHARACTER_ENCODING = Charsets.UTF_8.name();
 
     private static final Logger log = LoggerFactory.getLogger(ServletConfig.class);
 

@@ -7,6 +7,8 @@ import com.google.inject.Singleton;
 import com.nexthighspeedmetaltube.datasupplier.DataSupplier;
 import com.nexthighspeedmetaltube.model.Departure;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -36,7 +38,10 @@ public class DeparturesServlet extends HttpServlet {
 
     private static final String STOP_ID_PARAMETER_NAME = "stopId";
     private static final String MAX_PARAMETER_NAME = "max";
+
     private static final String TIME_PATTERN = "HH:mm";
+
+    private static final Logger log = LoggerFactory.getLogger(DeparturesServlet.class);
 
     private static final Gson serializer = new GsonBuilder()
             .registerTypeAdapter(DateTime.class, new DateTimeSerializer())
@@ -53,18 +58,46 @@ public class DeparturesServlet extends HttpServlet {
         String stopId = request.getParameter(STOP_ID_PARAMETER_NAME);
         String max = request.getParameter(MAX_PARAMETER_NAME);
 
-        if (stopId == null || max == null) {
+        if (!checkArguments(stopId, max)) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
-        ImmutableList<Departure> departures = dataSupplier.getNextDepartures(stopId, DateTime.now());
-        departures = departures.subList(0, Integer.parseInt(max));
+        ImmutableList<Departure> departures;
+        try {
+            departures = dataSupplier.getNextDepartures(stopId, DateTime.now());
+        } catch (IOException e) {
+            log.warn("Couldn't get departures from data supplier.", e);
+            response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
+            return;
+        }
 
+        // Only return max number of departures
+        if (!departures.isEmpty()) {
+            departures = departures.subList(0, Math.min(departures.size(), Integer.parseInt(max)));
+        }
         response.setContentType(ServletConfig.MIME_RESPONSE_TYPE);
+        response.setCharacterEncoding(ServletConfig.CHARACTER_ENCODING);
         PrintWriter writer = response.getWriter();
         writer.write(serializer.toJson(departures));
         writer.flush();
+    }
+
+    private boolean checkArguments(String stopId, String max) {
+        if (stopId == null || max == null) {
+            return false;
+        }
+        if (!ServletUtil.BASIC_STRING_ONLY_PATTERN.matcher(stopId).matches()) {
+            return false;
+        }
+        if (!ServletUtil.INTEGER_ONLY_PATTERN.matcher(max).matches()) {
+            return false;
+        }
+        int maxInt = Integer.parseInt(max);
+        if (maxInt <= 0) {
+            return false;
+        }
+        return true;
     }
 
     private static class DateTimeSerializer implements JsonSerializer<DateTime> {

@@ -5,20 +5,19 @@ import com.google.common.base.Preconditions;
 
 /**
  * A {@code Stop} is somewhere where some form of public transport can stop to pick up passengers.
- * It has a system id, a friendly name, and coordinates in WGS84 format (represented as integers).
+ * Its component parts are a system id, a friendly name, and a {@link com.nexthighspeedmetaltube.model.Coordinate}.
  * <p>
- * This class is thread-safe and immutable.
+ * This class is immutable and thread-safe.
  */
 public final class Stop {
 
     private final String id, name;
-    private final int latitude, longitude;
+    private final Coordinate coordinate;
 
     private Stop(Builder builder) {
         id = builder.id;
         name = builder.name;
-        latitude = builder.latitude;
-        longitude = builder.longitude;
+        coordinate = builder.coordinate;
     }
 
     public String getId() {
@@ -29,12 +28,8 @@ public final class Stop {
         return name;
     }
 
-    public int getLatitude() {
-        return latitude;
-    }
-
-    public int getLongitude() {
-        return longitude;
+    public Coordinate getCoordinate() {
+        return coordinate;
     }
 
     public static Builder newBuilder() {
@@ -52,10 +47,7 @@ public final class Stop {
 
         Stop stop = (Stop) o;
 
-        if (latitude != stop.latitude) {
-            return false;
-        }
-        if (longitude != stop.longitude) {
+        if (!coordinate.equals(stop.coordinate)) {
             return false;
         }
         if (!id.equals(stop.id)) {
@@ -70,7 +62,7 @@ public final class Stop {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, name, latitude, longitude);
+        return Objects.hashCode(id, name, coordinate);
     }
 
     @Override
@@ -78,8 +70,7 @@ public final class Stop {
         return Objects.toStringHelper(this)
                 .add("id", id)
                 .add("name", name)
-                .add("latitude", latitude)
-                .add("longitude", longitude)
+                .add("coordinate", coordinate)
                 .toString();
     }
 
@@ -88,18 +79,10 @@ public final class Stop {
      */
     public static final class Builder {
 
-        private static final int LATITUDE_MIN = -90000000;
-        private static final int LATITUDE_MAX = 90000000;
-        private static final int LONGITUDE_MIN = -180000000;
-        private static final int LONGITUDE_MAX = 180000000;
-
         private static final String BUILDER_ILLEGAL_STATE_MESSAGE = "One or more of id, name, latitude, and/or longitude hasn't been set.";
-        private static final String LATITUDE_NOT_WITHIN_REQUIRED_RANGE_MESSAGE = "Latitude not within required range. Look up WGS84.";
-        private static final String LONGITUDE_NOT_WITHIN_REQUIRED_RANGE_MESSAGE = "Longitude not within required range. Look up WGS84.";
 
         private String id, name;
-        private int latitude, longitude;
-        private boolean hasLatitude, hasLongitude;
+        private Coordinate coordinate;
 
         public Builder setId(String id) {
             this.id = Preconditions.checkNotNull(id);
@@ -111,22 +94,13 @@ public final class Stop {
             return this;
         }
 
-        public Builder setLatitude(int latitude) {
-            Preconditions.checkArgument(LATITUDE_MIN <= latitude && latitude <= LATITUDE_MAX, LATITUDE_NOT_WITHIN_REQUIRED_RANGE_MESSAGE);
-            this.latitude = latitude;
-            hasLatitude = true;
-            return this;
-        }
-
-        public Builder setLongitude(int longitude) {
-            Preconditions.checkArgument(LONGITUDE_MIN <= latitude && latitude <= LONGITUDE_MAX, LONGITUDE_NOT_WITHIN_REQUIRED_RANGE_MESSAGE);
-            this.longitude = longitude;
-            hasLongitude = true;
+        public Builder setCoordinate(Coordinate coordinate) {
+            this.coordinate = Preconditions.checkNotNull(coordinate);
             return this;
         }
 
         public Stop build() {
-            Preconditions.checkState(id != null && name != null && hasLatitude && hasLongitude, BUILDER_ILLEGAL_STATE_MESSAGE);
+            Preconditions.checkState(id != null && name != null && coordinate != null, BUILDER_ILLEGAL_STATE_MESSAGE);
             return new Stop(this);
         }
     }

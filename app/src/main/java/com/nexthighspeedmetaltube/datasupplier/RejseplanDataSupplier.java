@@ -1,9 +1,11 @@
 package com.nexthighspeedmetaltube.datasupplier;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.io.Closer;
+import com.google.inject.Singleton;
+import com.nexthighspeedmetaltube.model.Coordinate;
 import com.nexthighspeedmetaltube.model.Departure;
 import com.nexthighspeedmetaltube.model.Stop;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.joda.time.ReadableDateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -28,6 +30,7 @@ import java.net.URLConnection;
  * <p>
  * This class is thread-safe.
  */
+@Singleton
 public final class RejseplanDataSupplier implements DataSupplier {
 
     private static final String BASE_URL = "http://xmlopen.rejseplanen.dk/bin/rest.exe/";
@@ -55,10 +58,10 @@ public final class RejseplanDataSupplier implements DataSupplier {
     private static final Logger log = LoggerFactory.getLogger(RejseplanDataSupplier.class);
 
     @Override
-    public ImmutableList<Stop> getNearbyStops(int latitude, int longitude, int radius, int max) throws IOException {
+    public ImmutableList<Stop> getNearbyStops(Coordinate coordinate, int radius, int max) throws IOException {
         final ImmutableList.Builder<Stop> stops = ImmutableList.builder();
 
-        connectAndParse(BASE_URL + String.format(NEARBY_STOPS_URL, longitude, latitude, radius, max), new DefaultHandler() {
+        connectAndParse(BASE_URL + String.format(NEARBY_STOPS_URL, coordinate.getLongitude(), coordinate.getLatitude(), radius, max), new DefaultHandler() {
             @Override
             public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
                 if (!XML_STOP.equals(qName)) {
@@ -77,23 +80,23 @@ public final class RejseplanDataSupplier implements DataSupplier {
         return Stop.newBuilder()
                 .setId(attributes.getValue(XML_STOP_ID))
                 .setName(attributes.getValue(XML_STOP_NAME))
-                .setLatitude(Integer.parseInt(attributes.getValue(XML_STOP_LATITUDE)))
-                .setLongitude(Integer.parseInt(attributes.getValue(XML_STOP_LONGITUDE)))
+                .setCoordinate(new Coordinate(Integer.parseInt(attributes.getValue(XML_STOP_LATITUDE)), Integer.parseInt(attributes.getValue(XML_STOP_LONGITUDE))))
                 .build();
     }
 
     @Override
-    public ImmutableList<Departure> getNextDepartures(String stopId, final ReadableDateTime time) throws IOException {
+    public ImmutableList<Departure> getNextDepartures(String stopId) throws IOException {
         final ImmutableList.Builder<Departure> departures = ImmutableList.builder();
 
-        connectAndParse(BASE_URL + String.format(DEPARTURES_URL, stopId, DATE_FORMATTER.print(time), TIME_FORMATTER.print(time)), new DefaultHandler() {
+        final DateTime now = DateTime.now();
+        connectAndParse(BASE_URL + String.format(DEPARTURES_URL, stopId, DATE_FORMATTER.print(now), TIME_FORMATTER.print(now)), new DefaultHandler() {
             @Override
             public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
                 if (!XML_DEPARTURE.equals(qName)) {
                     return;
                 }
 
-                Departure departure = parseDeparture(attributes, time);
+                Departure departure = parseDeparture(attributes, now);
                 departures.add(departure);
             }
         });
@@ -119,31 +122,22 @@ public final class RejseplanDataSupplier implements DataSupplier {
     }
 
     private void connectAndParse(String urlAsString, DefaultHandler handler) throws IOException {
-        // See https://code.google.com/p/guava-libraries/wiki/ClosingResourcesExplained
-        Closer closer = Closer.create();
-        try {
-            try {
-                log.debug("Connecting to {}...", urlAsString);
-                URL url = new URL(urlAsString);
-                URLConnection connection = url.openConnection();
-                BufferedInputStream in = closer.register(new BufferedInputStream(connection.getInputStream()));
-                SAXParserFactory parserFactory = SAXParserFactory.newInstance();
-                SAXParser parser = parserFactory.newSAXParser();
-                parser.parse(in, handler);
-            } catch (MalformedURLException e) {
-                // This should never happen, and is a programming error. Therefore, throw it again as a RuntimeException.
-                throw new RuntimeException(e);
-            } catch (ParserConfigurationException e) {
-                // This likewise should never happen, and is a programming error. Therefore, throw it again as a RuntimeException.
-                throw new RuntimeException(e);
-            } catch (SAXException e) {
-                // Just rethrow as connection error
-                throw new IOException(e);
-            }
-        } catch (Throwable e) {
-            throw closer.rethrow(e);
-        } finally {
-            closer.close();
+        log.debug("Connecting to {}...", urlAsString);
+        URL url = new URL(urlAsString);
+        URLConnection connection = url.openConnection();
+        try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream())) {
+            SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+            SAXParser parser = parserFactory.newSAXParser();
+            parser.parse(in, handler);
+        } catch (MalformedURLException e) {
+            // This should never happen, and is a programming error. Therefore, throw it again as a RuntimeException.
+            throw new RuntimeException(e);
+        } catch (ParserConfigurationException e) {
+            // This likewise should never happen, and is a programming error. Therefore, throw it again as a RuntimeException.
+            throw new RuntimeException(e);
+        } catch (SAXException e) {
+            // Just rethrow as connection error
+            throw new IOException(e);
         }
     }
 }

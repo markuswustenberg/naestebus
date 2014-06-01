@@ -5,6 +5,7 @@ import com.nexthighspeedmetaltube.model.Coordinate;
 import com.nexthighspeedmetaltube.model.Departure;
 import com.nexthighspeedmetaltube.model.Stop;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,12 +25,12 @@ public class TestJsonSerializer {
             + "{\"id\":\"id2\",\"name\":\"stop2\",\"coordinate\":{\"latitude\":1,\"longitude\":1}}]";
 
     private static final ImmutableList<Departure> DEPARTURES = ImmutableList.of(
-            Departure.newBuilder().setName("dep1").setTime(new DateTime(0)).build(),
-            Departure.newBuilder().setName("dep2").setTime(new DateTime(1)).setDirection("home").build()
+            Departure.newBuilder().setName("dep1").setTime(new DateTime(0, DateTimeZone.UTC)).build(),
+            Departure.newBuilder().setName("dep2").setTime(new DateTime(1, DateTimeZone.UTC)).setDirection("home").build()
     );
 
-    private static final String SERIALIZED_DEPARTURES = "[{\"name\":\"dep1\",\"direction\":\"\",\"hasDirection\":false,\"time\":\"01:00\"},"
-            + "{\"name\":\"dep2\",\"direction\":\"home\",\"hasDirection\":true,\"time\":\"01:00\"}]";
+    private static final String SERIALIZED_DEPARTURES = "[{\"name\":\"dep1\",\"direction\":\"\",\"hasDirection\":false,\"time\":\"00:00\"},"
+            + "{\"name\":\"dep2\",\"direction\":\"home\",\"hasDirection\":true,\"time\":\"00:00\"}]";
 
     private Serializer serializer;
 

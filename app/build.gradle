@@ -1,8 +1,21 @@
 version '0.2.0-SNAPSHOT'
 
 // Jetty configuration
+httpPort = 8080
+stopKey = "stopKey"
+stopPort = 8081
 jettyRun.contextPath = ""
-jettyRun.httpPort = 8080
+
+// Run jetty before tests, shutdown after
+// Shutdown currently doesn't work because of a bug in Gradle, see http://issues.gradle.org/browse/GRADLE-2263
+test.doFirst {
+    jettyRun.daemon = true
+    tasks.jettyRun.execute()
+}
+
+test.doLast {
+    tasks.jettyStop.execute()
+}
 
 dependencies {
     // Servlet API

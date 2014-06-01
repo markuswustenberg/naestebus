@@ -1,11 +1,9 @@
-package com.nexthighspeedmetaltube;
+package com.nexthighspeedmetaltube.serialize;
 
 import com.google.common.collect.ImmutableList;
 import com.nexthighspeedmetaltube.model.Coordinate;
 import com.nexthighspeedmetaltube.model.Departure;
 import com.nexthighspeedmetaltube.model.Stop;
-import com.nexthighspeedmetaltube.serialize.JsonSerializer;
-import com.nexthighspeedmetaltube.serialize.Serializer;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;

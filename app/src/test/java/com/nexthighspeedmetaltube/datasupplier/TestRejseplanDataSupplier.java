@@ -5,6 +5,7 @@ import com.nexthighspeedmetaltube.model.Coordinate;
 import com.nexthighspeedmetaltube.model.Departure;
 import com.nexthighspeedmetaltube.model.Stop;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -73,7 +74,8 @@ public class TestRejseplanDataSupplier {
         // We need an id that changes frequently according to spec
         ImmutableList<Stop> stops = dataSupplier.getNearbyStops(UBER_OFFICE_COORDINATE, NEARBY_STOPS_RADIUS, DEPARTURES_STOP_COUNT);
 
-        ImmutableList<Departure> departures = dataSupplier.getNextDepartures(stops.get(0).getId(), DEPARTURES_TIME);
+        DateTimeUtils.setCurrentMillisFixed(DEPARTURES_TIME.getMillis());
+        ImmutableList<Departure> departures = dataSupplier.getNextDepartures(stops.get(0).getId());
 
         // Test a few
         Departure departure1 = departures.get(0);

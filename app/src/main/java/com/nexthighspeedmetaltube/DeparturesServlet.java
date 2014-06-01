@@ -50,7 +50,7 @@ public class DeparturesServlet extends HttpServlet {
     private final DataSupplier dataSupplier;
 
     @Inject
-    DeparturesServlet(DataSupplier dataSupplier) {
+    DeparturesServlet(@DataSupplier.Caching DataSupplier dataSupplier) {
         this.dataSupplier = dataSupplier;
     }
 
@@ -65,7 +65,7 @@ public class DeparturesServlet extends HttpServlet {
 
         ImmutableList<Departure> departures;
         try {
-            departures = dataSupplier.getNextDepartures(stopId, DateTime.now());
+            departures = dataSupplier.getNextDepartures(stopId);
         } catch (IOException e) {
             log.warn("Couldn't get departures from data supplier.", e);
             response.sendError(HttpServletResponse.SC_BAD_GATEWAY);

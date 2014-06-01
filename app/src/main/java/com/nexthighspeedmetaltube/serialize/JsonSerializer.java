@@ -33,7 +33,9 @@ public final class JsonSerializer implements Serializer {
         return serializer.toJson(departures);
     }
 
-
+    /**
+     * A {@link com.google.gson.JsonSerializer} that serializes Joda-Time's {@link org.joda.time.DateTime} to just HH:mm.
+     */
     private static class DateTimeSerializer implements com.google.gson.JsonSerializer<DateTime> {
         @Override
         public JsonElement serialize(DateTime src, Type typeOfSrc, JsonSerializationContext context) {

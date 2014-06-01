@@ -36,6 +36,8 @@ import java.lang.reflect.Type;
 @Singleton
 public class DeparturesServlet extends HttpServlet {
 
+    private static final long serialVersionUID = 0;
+
     private static final String STOP_ID_PARAMETER_NAME = "stopId";
     private static final String MAX_PARAMETER_NAME = "max";
 
@@ -43,11 +45,11 @@ public class DeparturesServlet extends HttpServlet {
 
     private static final Logger log = LoggerFactory.getLogger(DeparturesServlet.class);
 
-    private static final Gson serializer = new GsonBuilder()
+    private final transient Gson serializer = new GsonBuilder()
             .registerTypeAdapter(DateTime.class, new DateTimeSerializer())
             .create();
 
-    private final DataSupplier dataSupplier;
+    private final transient DataSupplier dataSupplier;
 
     @Inject
     DeparturesServlet(@DataSupplier.Caching DataSupplier dataSupplier) {
@@ -84,17 +86,11 @@ public class DeparturesServlet extends HttpServlet {
     }
 
     private boolean checkArguments(String stopId, String max) {
-        if (stopId == null || max == null) {
-            return false;
-        }
-        if (!ServletUtil.BASIC_STRING_ONLY_PATTERN.matcher(stopId).matches()) {
-            return false;
-        }
-        if (!ServletUtil.INTEGER_ONLY_PATTERN.matcher(max).matches()) {
-            return false;
-        }
-        int maxInt = Integer.parseInt(max);
-        if (maxInt <= 0) {
+        if (stopId == null
+            || !ServletUtil.BASIC_STRING_ONLY_PATTERN.matcher(stopId).matches()
+            || max == null
+            || !ServletUtil.INTEGER_ONLY_PATTERN.matcher(max).matches()
+            || Integer.parseInt(max) <= 0) {
             return false;
         }
         return true;

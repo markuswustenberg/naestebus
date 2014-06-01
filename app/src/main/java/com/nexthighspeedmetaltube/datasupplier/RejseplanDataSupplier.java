@@ -1,7 +1,6 @@
 package com.nexthighspeedmetaltube.datasupplier;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.io.Closer;
 import com.google.inject.Singleton;
 import com.nexthighspeedmetaltube.model.Coordinate;
 import com.nexthighspeedmetaltube.model.Departure;
@@ -123,31 +122,22 @@ public final class RejseplanDataSupplier implements DataSupplier {
     }
 
     private void connectAndParse(String urlAsString, DefaultHandler handler) throws IOException {
-        // See https://code.google.com/p/guava-libraries/wiki/ClosingResourcesExplained
-        Closer closer = Closer.create();
-        try {
-            try {
-                log.debug("Connecting to {}...", urlAsString);
-                URL url = new URL(urlAsString);
-                URLConnection connection = url.openConnection();
-                BufferedInputStream in = closer.register(new BufferedInputStream(connection.getInputStream()));
-                SAXParserFactory parserFactory = SAXParserFactory.newInstance();
-                SAXParser parser = parserFactory.newSAXParser();
-                parser.parse(in, handler);
-            } catch (MalformedURLException e) {
-                // This should never happen, and is a programming error. Therefore, throw it again as a RuntimeException.
-                throw new RuntimeException(e);
-            } catch (ParserConfigurationException e) {
-                // This likewise should never happen, and is a programming error. Therefore, throw it again as a RuntimeException.
-                throw new RuntimeException(e);
-            } catch (SAXException e) {
-                // Just rethrow as connection error
-                throw new IOException(e);
-            }
-        } catch (Throwable e) {
-            throw closer.rethrow(e);
-        } finally {
-            closer.close();
+        log.debug("Connecting to {}...", urlAsString);
+        URL url = new URL(urlAsString);
+        URLConnection connection = url.openConnection();
+        try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream())) {
+            SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+            SAXParser parser = parserFactory.newSAXParser();
+            parser.parse(in, handler);
+        } catch (MalformedURLException e) {
+            // This should never happen, and is a programming error. Therefore, throw it again as a RuntimeException.
+            throw new RuntimeException(e);
+        } catch (ParserConfigurationException e) {
+            // This likewise should never happen, and is a programming error. Therefore, throw it again as a RuntimeException.
+            throw new RuntimeException(e);
+        } catch (SAXException e) {
+            // Just rethrow as connection error
+            throw new IOException(e);
         }
     }
 }

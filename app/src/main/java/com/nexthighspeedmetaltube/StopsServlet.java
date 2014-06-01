@@ -37,6 +37,8 @@ import java.io.PrintWriter;
 @Singleton
 public class StopsServlet extends HttpServlet {
 
+    private static final long serialVersionUID = 0;
+
     private static final String LATITUDE_PARAMETER_NAME = "latitude";
     private static final String LONGITUDE_PARAMETER_NAME = "longitude";
     private static final String RADIUS_PARAMETER_NAME = "radius";
@@ -44,9 +46,9 @@ public class StopsServlet extends HttpServlet {
 
     private static final Logger log = LoggerFactory.getLogger(StopsServlet.class);
 
-    private static final Gson serializer = new Gson();
+    private final transient Gson serializer = new Gson();
 
-    private final DataSupplier dataSupplier;
+    private final transient DataSupplier dataSupplier;
 
     @Inject
     StopsServlet(@DataSupplier.Caching DataSupplier dataSupplier) {
@@ -82,18 +84,16 @@ public class StopsServlet extends HttpServlet {
     }
 
     private boolean checkArguments(String latitude, String longitude, String radius, String max) {
-        if (latitude == null || longitude == null || radius == null || max == null) {
-            return false;
-        }
-        if (!ServletUtil.INTEGER_ONLY_PATTERN.matcher(latitude).matches() || !ServletUtil.INTEGER_ONLY_PATTERN.matcher(longitude).matches()) {
-            return false;
-        }
-        if (!ServletUtil.INTEGER_ONLY_PATTERN.matcher(radius).matches() || !ServletUtil.INTEGER_ONLY_PATTERN.matcher(max).matches()) {
-            return false;
-        }
-        int radiusInt = Integer.parseInt(radius);
-        int maxInt = Integer.parseInt(max);
-        if (radiusInt <= 0 || maxInt <= 0) {
+        if (latitude == null
+            || !ServletUtil.INTEGER_ONLY_PATTERN.matcher(latitude).matches()
+            || longitude == null
+            || !ServletUtil.INTEGER_ONLY_PATTERN.matcher(longitude).matches()
+            || radius == null
+            || !ServletUtil.INTEGER_ONLY_PATTERN.matcher(radius).matches()
+            || Integer.parseInt(radius) <= 0
+            || max == null
+            || !ServletUtil.INTEGER_ONLY_PATTERN.matcher(max).matches()
+            || Integer.parseInt(max) <= 0) {
             return false;
         }
         return true;

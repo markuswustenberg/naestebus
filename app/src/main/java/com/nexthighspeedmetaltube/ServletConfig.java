@@ -8,6 +8,8 @@ import com.google.inject.servlet.ServletModule;
 import com.nexthighspeedmetaltube.datasupplier.CachingDataSupplier;
 import com.nexthighspeedmetaltube.datasupplier.DataSupplier;
 import com.nexthighspeedmetaltube.datasupplier.RejseplanDataSupplier;
+import com.nexthighspeedmetaltube.serialize.JsonSerializer;
+import com.nexthighspeedmetaltube.serialize.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,8 @@ public class ServletConfig extends GuiceServletContextListener {
 
                 bind(DataSupplier.class).annotatedWith(DataSupplier.Caching.class).to(CachingDataSupplier.class);
                 bind(DataSupplier.class).to(RejseplanDataSupplier.class);
+
+                bind(Serializer.class).to(JsonSerializer.class);
             }
         });
     }

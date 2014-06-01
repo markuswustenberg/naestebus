@@ -1,12 +1,12 @@
 package com.nexthighspeedmetaltube;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.nexthighspeedmetaltube.datasupplier.DataSupplier;
 import com.nexthighspeedmetaltube.model.Coordinate;
 import com.nexthighspeedmetaltube.model.Stop;
+import com.nexthighspeedmetaltube.serialize.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,13 +46,13 @@ public class StopsServlet extends HttpServlet {
 
     private static final Logger log = LoggerFactory.getLogger(StopsServlet.class);
 
-    private final transient Gson serializer = new Gson();
-
     private final transient DataSupplier dataSupplier;
+    private final transient Serializer serializer;
 
     @Inject
-    StopsServlet(@DataSupplier.Caching DataSupplier dataSupplier) {
+    StopsServlet(@DataSupplier.Caching DataSupplier dataSupplier, Serializer serializer) {
         this.dataSupplier = dataSupplier;
+        this.serializer = serializer;
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -79,7 +79,7 @@ public class StopsServlet extends HttpServlet {
         response.setContentType(ServletConfig.MIME_RESPONSE_TYPE);
         response.setCharacterEncoding(ServletConfig.CHARACTER_ENCODING);
         PrintWriter writer = response.getWriter();
-        writer.write(serializer.toJson(stops));
+        writer.write(serializer.serializeStops(stops));
         writer.flush();
     }
 

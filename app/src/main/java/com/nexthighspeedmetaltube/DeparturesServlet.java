@@ -1,12 +1,11 @@
 package com.nexthighspeedmetaltube;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.*;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.nexthighspeedmetaltube.datasupplier.DataSupplier;
 import com.nexthighspeedmetaltube.model.Departure;
-import org.joda.time.DateTime;
+import com.nexthighspeedmetaltube.serialize.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Type;
 
 /**
  * A {@code DeparturesServlet} serves {@link com.nexthighspeedmetaltube.model.Departure}s for a {@link com.nexthighspeedmetaltube.model.Stop}.
@@ -41,19 +39,15 @@ public class DeparturesServlet extends HttpServlet {
     private static final String STOP_ID_PARAMETER_NAME = "stopId";
     private static final String MAX_PARAMETER_NAME = "max";
 
-    private static final String TIME_PATTERN = "HH:mm";
-
     private static final Logger log = LoggerFactory.getLogger(DeparturesServlet.class);
 
-    private final transient Gson serializer = new GsonBuilder()
-            .registerTypeAdapter(DateTime.class, new DateTimeSerializer())
-            .create();
-
     private final transient DataSupplier dataSupplier;
+    private final transient Serializer serializer;
 
     @Inject
-    DeparturesServlet(@DataSupplier.Caching DataSupplier dataSupplier) {
+    DeparturesServlet(@DataSupplier.Caching DataSupplier dataSupplier, Serializer serializer) {
         this.dataSupplier = dataSupplier;
+        this.serializer = serializer;
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -81,7 +75,7 @@ public class DeparturesServlet extends HttpServlet {
         response.setContentType(ServletConfig.MIME_RESPONSE_TYPE);
         response.setCharacterEncoding(ServletConfig.CHARACTER_ENCODING);
         PrintWriter writer = response.getWriter();
-        writer.write(serializer.toJson(departures));
+        writer.write(serializer.serializeDepartures(departures));
         writer.flush();
     }
 
@@ -94,12 +88,5 @@ public class DeparturesServlet extends HttpServlet {
             return false;
         }
         return true;
-    }
-
-    private static class DateTimeSerializer implements JsonSerializer<DateTime> {
-        @Override
-        public JsonElement serialize(DateTime src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(src.toString(TIME_PATTERN));
-        }
     }
 }

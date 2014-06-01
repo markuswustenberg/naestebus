@@ -39,5 +39,7 @@ public interface DataSupplier {
     ImmutableList<Departure> getNextDepartures(String stopId) throws IOException;
 
     @BindingAnnotation @Target({ FIELD, PARAMETER, METHOD }) @Retention(RUNTIME)
-    public @interface Caching {}
+    public @interface Caching {
+
+    }
 }

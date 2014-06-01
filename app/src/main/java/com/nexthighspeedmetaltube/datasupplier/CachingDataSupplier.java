@@ -48,7 +48,7 @@ public final class CachingDataSupplier implements DataSupplier {
         ImmutableList<Departure> cached = cache.get(stopId);
 
         // If cache is too old (not in the future) or we have a cache miss, do caching and return
-        if ((cached != null && !cached.get(0).getTime().isAfterNow()) || cached == null) {
+        if (cached == null || !cached.get(0).getTime().isAfterNow()) {
             log.trace("Cache miss for stop id {}.", stopId);
             ImmutableList<Departure> departures = dataSupplier.getNextDepartures(stopId);
             if (!departures.isEmpty()) {

@@ -91,6 +91,9 @@ Stop.prototype.updateAndShowInfoWindow = function() {
             // If content is empty, no departures are available
             if (!content) {
                 content = '<p>No departures anytime soon.</p>';
+            } else {
+                // Otherwise, add data source disclaimer
+                content += '<p>Data by <a href="http://www.rejseplanen.dk">Rejseplanen</a> under <a href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons</a></p>';
             }
 
             // Close the previous one, set content, and open again with new content

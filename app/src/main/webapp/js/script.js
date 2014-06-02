@@ -88,6 +88,11 @@ Stop.prototype.updateAndShowInfoWindow = function() {
                 content += '</p>';
             });
 
+            // If content is empty, no departures are available
+            if (!content) {
+                content = '<p>No departures anytime soon.</p>';
+            }
+
             // Close the previous one, set content, and open again with new content
             Stop.infoWindow.close();
             Stop.infoWindow.setContent(content);

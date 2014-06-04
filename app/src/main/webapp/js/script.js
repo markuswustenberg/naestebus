@@ -1,5 +1,7 @@
 var app = {
     SEARCH_RADIUS: 500,
+    DEFAULT_LATITUDE: 56.153014,
+    DEFAULT_LONGITUDE: 10.203261,
 
     me: null,
     stops: {}
@@ -39,15 +41,35 @@ function Me(map) {
 
     // Add position listener
     google.maps.event.addListener(this.marker, "dragend", function() {
+        self.addPositionToHistory();
         self.onPositionUpdate();
     });
 
+    // Define what happens at back button press
+    window.onpopstate = function(e) {
+        if (e.state) {
+            self.marker.setPosition(e.state.position);
+            self.onPositionUpdate();
+        }
+    };
+
+    this.addPositionToHistory();
     this.onPositionUpdate();
 }
 Me.prototype.onPositionUpdate = function() {
-    this.circle.setCenter(this.marker.getPosition());
-    this.map.panTo(this.marker.getPosition());
+    var position = this.marker.getPosition();
+    this.circle.setCenter(position);
+    this.map.panTo(position);
     this.findStops();
+};
+Me.prototype.addPositionToHistory = function() {
+    var position = this.marker.getPosition();
+    window.history.pushState({
+        position: {
+            lat: position.lat(),
+            lng: position.lng()
+        }
+    }, position.toString(), "?position=" + position.toUrlValue());
 };
 Me.prototype.findStops = function() {
     // Find and add stop markers
@@ -124,6 +146,21 @@ Stop.prototype.updateAndShowInfoWindow = function() {
 };
 
 function initialize() {
+    var geolocate = true;
+    var latitude = app.DEFAULT_LATITUDE;
+    var longitude = app.DEFAULT_LONGITUDE;
+
+    // If latitude and longitude are explicitly given, don't geolocate
+    var position = $.url("?position");
+    if (position !== null) {
+        position = position.split(",");
+        if (position.length == 2) {
+            geolocate = false;
+            latitude = position[0];
+            longitude = position[1];
+        }
+    }
+
     var map = new google.maps.Map(document.getElementById("map-canvas"), {
         panControl: false,
         zoomControl: false,
@@ -131,7 +168,7 @@ function initialize() {
         streetViewControl: false,
         scaleControl: false,
         overviewMapControl: false,
-        center: new google.maps.LatLng(56.153014, 10.203261),
+        center: new google.maps.LatLng(latitude, longitude),
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         zoom: 15
     });
@@ -155,8 +192,8 @@ function initialize() {
         Stop.infoWindow.close();
     });
 
-    // Find current location if possible
-    if (navigator.geolocation) {
+    // Find current location if possible and not explicitly set
+    if (geolocate && navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
             map.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
             app.me = new Me(map);

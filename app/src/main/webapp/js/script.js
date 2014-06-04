@@ -1,4 +1,6 @@
 var app = {
+    SEARCH_RADIUS: 500,
+
     me: null,
     stops: {}
 };
@@ -22,6 +24,19 @@ function Me(map) {
         self.infoWindow.close();
     }, 3000);
 
+    // Add circle around me showing the bus stop search radius
+    this.circle = new google.maps.Circle({
+        center: this.marker.getPosition(),
+        clickable: false,
+        fillColor: "#ffffff",
+        fillOpacity: 0.3,
+        map: map,
+        radius: app.SEARCH_RADIUS,
+        strokeColor: "#000000",
+        strokeOpacity: 0,
+        zIndex: -10
+    });
+
     // Add position listener
     google.maps.event.addListener(this.marker, 'dragend', function() {
         self.onPositionUpdate();
@@ -30,6 +45,7 @@ function Me(map) {
     this.onPositionUpdate();
 }
 Me.prototype.onPositionUpdate = function() {
+    this.circle.setCenter(this.marker.getPosition());
     this.map.panTo(this.marker.getPosition());
     this.findStops();
 };
@@ -37,7 +53,7 @@ Me.prototype.findStops = function() {
     // Find and add stop markers
     var position = this.marker.getPosition();
     var self = this;
-    $.ajax("/stops?latitude=" + ((position.lat() * 1000000) | 0) + "&longitude=" + ((position.lng() * 1000000) | 0) + "&radius=1000&max=5", {
+    $.ajax("/stops?latitude=" + ((position.lat() * 1000000) | 0) + "&longitude=" + ((position.lng() * 1000000) | 0) + "&radius=" + app.SEARCH_RADIUS + "&max=50", {
         success: function(stops) {
             stops.forEach(function(stop) {
                 // Check if the marker is already present

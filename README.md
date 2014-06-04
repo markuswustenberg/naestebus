@@ -21,7 +21,7 @@ This section of the readme is for reviewers of the code. I chose the **departure
 
 > Create a service that gives real-time departure time for public transportation (use freely available public API). The app should geolocalize the user.
 
-I've created a service at www.nexthighspeedmetaltube.com that does exactly this (it works in Denmark, as the data source, _Rejseplanen_ , is Danish). The implementation is **full-stack**, although the focus has been on the backend. In the following, I will detail my design goals with the project, as well as describe functionality, code design, testing, and various technical choices.
+I've created a service at www.nexthighspeedmetaltube.com that does exactly this (it works in Denmark, as the data source, _Rejseplanen_, is Danish). The implementation is **full-stack**, although the focus has been on the backend. In the following, I will detail my design goals with the project, as well as describe functionality, code design, testing, and various technical choices.
 
 ## Design goals
 
@@ -77,7 +77,7 @@ The backend has running unit tests and integration tests, which can be run with 
 
 ### Frontend
 
-For the frontend, I have chosen to work with Javascript (naturally). I have used Javascript previously in a course and a little bit at my job as a webmaster, but not much. I chose to work only with plain Javascript and what the Google Maps API gives me (which is a lot), as well as a tiny bit of jQuery for communication to the backend and some parameter handling. This gives me a minimal and easily maintainable codebase in a ~200 line script.
+For the frontend, I have chosen to work with Javascript (naturally). I have used Javascript previously in a university course and a little bit at my job as a webmaster, but not much. I chose to work only with plain Javascript and what the Google Maps API gives me (which is a lot), as well as a tiny bit of jQuery for communication to the backend and some parameter handling. This gives me a minimal and easily maintainable codebase in a ~200 line script.
 
 I chose not to do automatic testing on the frontend, as I chose to concentrate these efforts on the backend.
 

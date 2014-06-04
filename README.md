@@ -4,15 +4,16 @@ When is the Next High Speed Metal Tube going nearby? Go to www.nexthighspeedmeta
 
 Sometimes, a High Speed Metal Tube (HSMT) is also—archaically—called a bus. Please disregard this.
 
-Note: This service only works in Denmark. If you're physically located outside Denmark, please go to http://localhost:8080/?position=56.172683,10.186436 instead, which positions you at the Uber office in Aarhus, Denmark.
+Note: This service only works in Denmark. If you're physically located outside Denmark, please go to [www.nexthighspeedmetaltube.com/?position=56.172683,10.186436](http://www.nexthighspeedmetaltube.com/?position=56.172683,10.186436) instead, which positions you at the Uber office in Aarhus, Denmark.
 
 # For developers
 
-Build status for branches `master` and `develop`, respectively:
 [![Build Status](https://travis-ci.org/2yxwx/nexthighspeedmetaltube.svg?branch=master)](https://travis-ci.org/2yxwx/nexthighspeedmetaltube)
 [![Build Status](https://travis-ci.org/2yxwx/nexthighspeedmetaltube.svg?branch=develop)](https://travis-ci.org/2yxwx/nexthighspeedmetaltube)
 
-To build the code yourself, clone the repository and run `./gradlew build` to test and build, and/or `./gradlew jettyRun` to run the web application locally (on http://localhost:8080). Check the javadocs for usage information. Note that some tests depend on data from a 3rd party web service, which (however unlikely) may unexpectedly have changed its API.
+Above: build status for branches `master` and `develop`, respectively.
+
+To build the code yourself, clone the repository and run `./gradlew build` to test and build, and/or `./gradlew jettyRun` to run the web application locally (on [localhost:8080](http://localhost:8080)). Check the javadocs for usage information of the backend. Note that some tests depend on data from a 3rd party web service, which (however unlikely) may unexpectedly have changed its API.
 
 # For reviewers
 
@@ -43,12 +44,17 @@ A professor teaching a software architecture course at my university taught me t
 
 ### Backend
 
-For the backend, I have chosen to work with plain old Java servlets, spiced with some Google Guice for dependency injection and Google GSON for serialization to JSON. I am an experienced Java developer. It made sense to use this language for several reasons:
+For the backend, I have chosen to work with plain old Java servlets, spiced with some Google Guice for dependency injection and Google GSON for serialization to JSON. I am an experienced Java developer.
+
+Although I was tempted to try out node.js (which I've been wanting to do for some time), I chose to go with a familiar platform, both because I knew this would lead to high quality code, but also because this is a coding challenge for a job interview, and I wanted to show my current skills. One could argue it would be better to show my skills in learning a new language and/or platform, but in the end, I opted for the current solution for the best "return of investment".
+
+It made sense to use the Java language and JVM platform for several reasons:
 
 - The Java language and platform is very mature and well-supported, also in the web world.
 - Cloud platforms such as Google App Engine support it, and it is easy to deploy the app onto it. This makes horizontal scalability really easy.
 - If wanted, newer languages such as Scala, Groovy, etc. can be run on the JVM also.
 - Unit and integration testing is really easy.
+- A lot of nice libraries exist for the platform.
 
 I chose not to use a large web framework, as all I really needed was a bit of code to handle requests and responses with a bit of trivial processing, but the rest is delegated to regular Java code. If things were to grow in that department, it would perhaps make sense to include a framework like Stripes, Spring, or Struts, e.g., for handling parameter checks, serialization, and possibly more. But currently, less is more.
 
@@ -63,7 +69,9 @@ Several libraries are used:
 
 I haven't worked much with Google Guice before, but found it very easy to use. Mockito, which enables easy mocking in test code, was all new to me, and quite enjoyable to use. The rest I have a fair amount of experience with.
 
-The code is built to be pretty much state-less, apart from some caching code. Apart from some model classes, two main abstractions exist, namely for the data supplier and for the serialization. Two concrete data suppliers currently exist: One that connects to Rejseplanen (the Danish travel data source) and another that is a decorator that caches requests. The serialization abstraction makes it easy to switch formats as well as unit test the serialization.
+The code is built to be pretty much state-less, apart from some caching code. This means that the application scales trivially by adding more machines to run from, perhaps with a load balancer in front.
+
+Apart from some model classes, two main abstractions exist, namely for the data supplier and for the serialization. Two concrete data suppliers currently exist: one that connects to Rejseplanen (_the_ Danish source of travel data) and another that is a decorator that caches requests. The serialization abstraction makes it easy to switch formats as well as unit test the serialization.
 
 The backend has running unit tests and integration tests, which can be run with `./gradlew check`. Note that Gradle currently has a bug that doesn't shut down the integrated Jetty web service after testing, so this has to be done manually after each test run.
 
@@ -77,11 +85,11 @@ I chose not to do automatic testing on the frontend, as I chose to concentrate t
 
 As mentioned previously, I concentrated on the backend, so automatic testing of the frontend has been left out. If I were to put more time into the project (which I might, because I plan on actually putting the service in production), some future work is:
 
-- Better caching of data, as to minimize communication to the 3rd party. Bus stops seem trivial to cache because they don't change much, except that their IDs change quite frequently, which is why I haven't done this currently. A spatial data structure such as a k-d tree in two dimensions would serve well. Also, currently the cached data for departures is kept indefinitely, which of course is a potential memory leak.
+- Better caching of data, as to minimize communication to the 3rd party. Bus stops seem trivial to cache because they don't change much, except that their IDs change quite frequently in this case, which is why I haven't done this currently. A spatial data structure such as a k-d tree in two dimensions would serve well here. Also, currently the cached data for departures is kept indefinitely, which of course is a potential memory leak. An easy fix is to let the cached data expire at some point.
 - I would really like a feature to favorite stops in a particular area, so that departure times pop up automatically. This would mean that no clicks would be necessary for getting the wanted information, which I think is cool. This could perhaps also be learnt automatically based on usage.
 - It would be nice to save usage data for analytics purposes.
 - There are some issues with the dependency injection and using decorators, which currently is a bit of a hack (using annnotations for a particular wanted caching DataSupplier).
-- Some proper performance testing.
+- Some proper performance testing would be a great idea.
 
 ## Epilogue
 

@@ -18,7 +18,7 @@ function Me(map) {
     var self = this;
 
     // Add info window telling the user this marker can be moved
-    this.infoWindow = new google.maps.InfoWindow({content: 'You can move me!'});
+    this.infoWindow = new google.maps.InfoWindow({content: "You can move me!"});
     this.infoWindow.open(map, this.marker);
     this.timeout = setTimeout(function() {
         self.infoWindow.close();
@@ -38,7 +38,7 @@ function Me(map) {
     });
 
     // Add position listener
-    google.maps.event.addListener(this.marker, 'dragend', function() {
+    google.maps.event.addListener(this.marker, "dragend", function() {
         self.onPositionUpdate();
     });
 
@@ -72,7 +72,7 @@ Me.prototype.findStops = function() {
 Me.prototype.showErrorInfoWindow = function() {
     clearTimeout(this.timeout);
     this.infoWindow.close();
-    this.infoWindow.setContent("Sorry! There was an error finding buses. I'm officially lost.");
+    this.infoWindow.setContent("<p>Sorry! There was an error finding buses. I'm officially lost.</p>");
     this.infoWindow.open(this.map, this.marker);
 };
 
@@ -93,23 +93,23 @@ function Stop(map, data) {
 Stop.infoWindow = new google.maps.InfoWindow();
 Stop.prototype.updateAndShowInfoWindow = function() {
     var self = this;
-    $.ajax("/departures?stopId=" + this.data.id + '&max=5', {
+    $.ajax("/departures?stopId=" + this.data.id + "&max=5", {
         success: function(departures) {
             var content = '';
             departures.forEach(function(departure) {
-                content += '<p><strong>' + departure.name + '</strong> ' + departure.time;
+                content += "<p><strong>" + departure.name + "</strong> " + departure.time;
                 if (departure.hasDirection) {
-                    content += ' → ' + departure.direction;
+                    content += " → " + departure.direction;
                 }
-                content += '</p>';
+                content += "</p>";
             });
 
             // If content is empty, no departures are available
             if (!content) {
-                content = '<p>No departures anytime soon.</p>';
+                content = "<p>No departure information available.</p>";
             } else {
                 // Otherwise, add data source disclaimer
-                content += '<p>Data by <a href="http://www.rejseplanen.dk">Rejseplanen</a> under <a href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons</a></p>';
+                content += '<p style="font-size: 75%;">Data by <a href="http://www.rejseplanen.dk">Rejseplanen</a> under <a href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons</a></p>';
             }
 
             // Close the previous one, set content, and open again with new content
@@ -136,7 +136,7 @@ function initialize() {
         zoom: 15
     });
     // See http://gmaps-samples-v3.googlecode.com/svn/trunk/styledmaps/wizard/index.html for styles
-    map.mapTypes.set('grayscale', new google.maps.StyledMapType([
+    map.mapTypes.set("grayscale", new google.maps.StyledMapType([
         {
             "stylers": [
                 { "saturation": -100 }
@@ -148,7 +148,7 @@ function initialize() {
             ]
         }
     ], {name: "Gray"}));
-    map.setMapTypeId('grayscale');
+    map.setMapTypeId("grayscale");
 
     // Close stop info windows if clicked outside
     google.maps.event.addListener(map, "click", function() {
@@ -166,4 +166,4 @@ function initialize() {
     }
 }
 
-google.maps.event.addDomListener(window, 'load', initialize);
+google.maps.event.addDomListener(window, "load", initialize);

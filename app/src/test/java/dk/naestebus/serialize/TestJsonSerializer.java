@@ -1,9 +1,9 @@
-package com.nexthighspeedmetaltube.serialize;
+package dk.naestebus.serialize;
 
 import com.google.common.collect.ImmutableList;
-import com.nexthighspeedmetaltube.model.Coordinate;
-import com.nexthighspeedmetaltube.model.Departure;
-import com.nexthighspeedmetaltube.model.Stop;
+import dk.naestebus.model.Coordinate;
+import dk.naestebus.model.Departure;
+import dk.naestebus.model.Stop;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Before;
@@ -12,7 +12,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests a {@link com.nexthighspeedmetaltube.serialize.JsonSerializer}.
+ * Tests a {@link dk.naestebus.serialize.JsonSerializer}.
  */
 public class TestJsonSerializer {
 

@@ -1,14 +1,14 @@
-package com.nexthighspeedmetaltube.model;
+package dk.naestebus.model;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests a {@link com.nexthighspeedmetaltube.model.Stop}.
+ * Tests a {@link dk.naestebus.model.Stop}.
  * <p>
- * We are not currently testing {@link com.nexthighspeedmetaltube.model.Stop#equals(Object)}, {@link com.nexthighspeedmetaltube.model.Stop#hashCode()}, nor
- * {@link com.nexthighspeedmetaltube.model.Stop#toString()}.
+ * We are not currently testing {@link dk.naestebus.model.Stop#equals(Object)}, {@link dk.naestebus.model.Stop#hashCode()}, nor
+ * {@link dk.naestebus.model.Stop#toString()}.
  */
 public class TestStop {
 

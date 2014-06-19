@@ -1,4 +1,4 @@
-package com.nexthighspeedmetaltube.integration;
+package dk.naestebus.integration;
 
 import org.junit.Test;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package com.nexthighspeedmetaltube.model;
+package dk.naestebus.model;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;

@@ -1,15 +1,15 @@
-package com.nexthighspeedmetaltube;
+package dk.naestebus;
 
 import com.google.common.base.Charsets;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
-import com.nexthighspeedmetaltube.datasupplier.CachingDataSupplier;
-import com.nexthighspeedmetaltube.datasupplier.DataSupplier;
-import com.nexthighspeedmetaltube.datasupplier.RejseplanDataSupplier;
-import com.nexthighspeedmetaltube.serialize.JsonSerializer;
-import com.nexthighspeedmetaltube.serialize.Serializer;
+import dk.naestebus.datasupplier.CachingDataSupplier;
+import dk.naestebus.datasupplier.DataSupplier;
+import dk.naestebus.datasupplier.RejseplanDataSupplier;
+import dk.naestebus.serialize.JsonSerializer;
+import dk.naestebus.serialize.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

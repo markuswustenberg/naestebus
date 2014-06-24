@@ -13,16 +13,18 @@ import java.io.FilenameFilter;
  */
 public class Main {
 
-    public static final String WAR_PATH = "build/libs/";
+    public static final String WAR_PATH = "app/build/libs/";
     public static final String WAR_FILE_ENDING = "war";
 
     private static final Logger log = LoggerFactory.getLogger(Main.class);
 
     public static void main(String... args) throws Exception {
         // Find war file
+        File root = new File(".");
         File warPath = new File(WAR_PATH);
 
-        log.info("Starting server on path {} with war path {}...", new File(".").getAbsolutePath(), warPath.getAbsolutePath());
+        log.info("Starting server on path {} with war path {}...", root.getAbsolutePath(), warPath.getAbsolutePath());
+        log.info("Files in root: {}.", root.list());
 
         File[] wars = warPath.listFiles(new FilenameFilter() {
             @Override

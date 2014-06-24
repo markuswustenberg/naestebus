@@ -17,9 +17,17 @@ test.doLast {
     tasks.jettyStop.execute()
 }
 
+// Configuration for Heroku
+mainClassName = "dk.naestebus.Main"
+applicationName = "naestebus"
+
 dependencies {
     // Servlet API
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+
+    // Jetty
+    compile 'org.eclipse.jetty:jetty-servlet:9.2.1.v20140609'
+    compile 'org.eclipse.jetty:jetty-webapp:9.2.1.v20140609'
 
     // All-purpose library
     compile 'com.google.guava:guava:17.0'

@@ -7,8 +7,6 @@ subprojects {
     apply plugin: 'pmd'
     apply plugin: 'checkstyle'
 
-    group 'dk.naestebus'
-
     sourceCompatibility = JavaVersion.VERSION_1_7
     targetCompatibility = JavaVersion.VERSION_1_7
 

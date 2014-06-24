@@ -1,11 +1,11 @@
-package com.nexthighspeedmetaltube.model;
+package dk.naestebus.model;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 /**
  * A {@code Stop} is somewhere where some form of public transport can stop to pick up passengers.
- * Its component parts are a system id, a friendly name, and a {@link com.nexthighspeedmetaltube.model.Coordinate}.
+ * Its component parts are a system id, a friendly name, and a {@link dk.naestebus.model.Coordinate}.
  * <p>
  * This class is immutable and thread-safe.
  */
@@ -75,7 +75,7 @@ public final class Stop {
     }
 
     /**
-     * This {@code Builder} is used to build a {@link com.nexthighspeedmetaltube.model.Stop}.
+     * This {@code Builder} is used to build a {@link dk.naestebus.model.Stop}.
      */
     public static final class Builder {
 

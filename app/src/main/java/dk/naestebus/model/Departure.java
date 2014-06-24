@@ -1,4 +1,4 @@
-package com.nexthighspeedmetaltube.model;
+package dk.naestebus.model;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
@@ -95,7 +95,7 @@ public final class Departure {
     }
 
     /**
-     * This {@code Builder} is used to build a {@link com.nexthighspeedmetaltube.model.Departure}.
+     * This {@code Builder} is used to build a {@link dk.naestebus.model.Departure}.
      */
     public static final class Builder {
 

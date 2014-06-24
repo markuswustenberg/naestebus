@@ -1,9 +1,9 @@
-package com.nexthighspeedmetaltube.datasupplier;
+package dk.naestebus.datasupplier;
 
 import com.google.common.collect.ImmutableList;
-import com.nexthighspeedmetaltube.model.Coordinate;
-import com.nexthighspeedmetaltube.model.Departure;
-import com.nexthighspeedmetaltube.model.Stop;
+import dk.naestebus.model.Coordinate;
+import dk.naestebus.model.Departure;
+import dk.naestebus.model.Stop;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
 import org.joda.time.ReadableInstant;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests the {@link com.nexthighspeedmetaltube.datasupplier.CachingDataSupplier}.
+ * Tests the {@link dk.naestebus.datasupplier.CachingDataSupplier}.
  */
 public class TestCachingDataSupplier {
 

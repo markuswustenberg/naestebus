@@ -1,4 +1,4 @@
-package com.nexthighspeedmetaltube;
+package dk.naestebus;
 
 import java.util.regex.Pattern;
 

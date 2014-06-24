@@ -1,9 +1,9 @@
-package com.nexthighspeedmetaltube.datasupplier;
+package dk.naestebus.datasupplier;
 
 import com.google.common.collect.ImmutableList;
-import com.nexthighspeedmetaltube.model.Coordinate;
-import com.nexthighspeedmetaltube.model.Departure;
-import com.nexthighspeedmetaltube.model.Stop;
+import dk.naestebus.model.Coordinate;
+import dk.naestebus.model.Departure;
+import dk.naestebus.model.Stop;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Tests the {@link com.nexthighspeedmetaltube.datasupplier.RejseplanDataSupplier}.
+ * Tests the {@link dk.naestebus.datasupplier.RejseplanDataSupplier}.
  */
 public class TestRejseplanDataSupplier {
 

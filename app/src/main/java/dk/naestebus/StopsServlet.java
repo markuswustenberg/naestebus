@@ -1,12 +1,12 @@
-package com.nexthighspeedmetaltube;
+package dk.naestebus;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.nexthighspeedmetaltube.datasupplier.DataSupplier;
-import com.nexthighspeedmetaltube.model.Coordinate;
-import com.nexthighspeedmetaltube.model.Stop;
-import com.nexthighspeedmetaltube.serialize.Serializer;
+import dk.naestebus.datasupplier.DataSupplier;
+import dk.naestebus.model.Coordinate;
+import dk.naestebus.model.Stop;
+import dk.naestebus.serialize.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * A {@code StopsServlet} serves nearby {@link com.nexthighspeedmetaltube.model.Stop}s.
+ * A {@code StopsServlet} serves nearby {@link dk.naestebus.model.Stop}s.
  * <p>
  * Retrieve nearby stops using HTTP GET, given the parameters {@code latitude}, {@code longitude}, {@code radius}, and {@code max}. The response is in JSON format.
  * <p>

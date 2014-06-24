@@ -1,16 +1,16 @@
-package com.nexthighspeedmetaltube.serialize;
+package dk.naestebus.serialize;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.*;
 import com.google.inject.Singleton;
-import com.nexthighspeedmetaltube.model.Departure;
-import com.nexthighspeedmetaltube.model.Stop;
+import dk.naestebus.model.Departure;
+import dk.naestebus.model.Stop;
 import org.joda.time.DateTime;
 
 import java.lang.reflect.Type;
 
 /**
- * A {@link com.nexthighspeedmetaltube.serialize.Serializer} that converts to JSON representation.
+ * A {@link dk.naestebus.serialize.Serializer} that converts to JSON representation.
  * <p>
  * This class is immutable and thread-safe.
  */

@@ -1,12 +1,12 @@
-package com.nexthighspeedmetaltube.datasupplier;
+package dk.naestebus.datasupplier;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.nexthighspeedmetaltube.model.Coordinate;
-import com.nexthighspeedmetaltube.model.Departure;
-import com.nexthighspeedmetaltube.model.Stop;
+import dk.naestebus.model.Coordinate;
+import dk.naestebus.model.Departure;
+import dk.naestebus.model.Stop;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * A {@code CachingDataSupplier} checks the cache for data before sending the request on to the component
- * {@link com.nexthighspeedmetaltube.datasupplier.DataSupplier} (decorator pattern).
+ * {@link dk.naestebus.datasupplier.DataSupplier} (decorator pattern).
  * <p>
  * Note that the cache mechanism is rather primitive as of yet. Nearby stops are not cached at all,
  * whereas departures are cached until the first departure in the list has happened. Everything is in-memory.

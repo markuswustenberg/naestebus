@@ -20,7 +20,7 @@ function Me(map) {
     var self = this;
 
     // Add info window telling the user this marker can be moved
-    this.infoWindow = new google.maps.InfoWindow({content: "You can move me!"});
+    this.infoWindow = new google.maps.InfoWindow({content: "Du kan flytte mig!"});
     this.infoWindow.open(map, this.marker);
     this.timeout = setTimeout(function() {
         self.infoWindow.close();
@@ -94,7 +94,7 @@ Me.prototype.findStops = function() {
 Me.prototype.showErrorInfoWindow = function() {
     clearTimeout(this.timeout);
     this.infoWindow.close();
-    this.infoWindow.setContent("<p>Sorry! There was an error finding buses. I'm officially lost.</p>");
+    this.infoWindow.setContent("<p>Undskyld! Jeg kan ikke læse afgangstavlen lige nu.</p>");
     this.infoWindow.open(this.map, this.marker);
 };
 
@@ -128,10 +128,10 @@ Stop.prototype.updateAndShowInfoWindow = function() {
 
             // If content is empty, no departures are available
             if (!content) {
-                content = "<p>No departure information available.</p>";
+                content = "<p>Ingen afgangsinformation for dette stop.</p>";
             } else {
                 // Otherwise, add data source disclaimer
-                content += '<p style="font-size: 75%;">Data by <a href="http://www.rejseplanen.dk">Rejseplanen</a> under <a href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons</a></p>';
+                content += '<p style="font-size: 75%;">Info fra <a href="http://www.rejseplanen.dk">Rejseplanen</a> under <a href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons</a>.</p>';
             }
 
             // Close the previous one, set content, and open again with new content

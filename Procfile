@@ -1,1 +1,1 @@
-web: ./build/install/naestebus/bin/naestebus
+web: ./app/build/install/naestebus/bin/naestebus

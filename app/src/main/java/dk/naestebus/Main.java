@@ -24,7 +24,7 @@ public class Main {
         File warPath = new File(WAR_PATH);
 
         log.info("Starting server on path {} with war path {}...", root.getAbsolutePath(), warPath.getAbsolutePath());
-        log.info("Files in root: {}.", root.list());
+        log.info("Files in root: {}.", (Object) root.list());
 
         File[] wars = warPath.listFiles(new FilenameFilter() {
             @Override

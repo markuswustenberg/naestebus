@@ -6,6 +6,7 @@ import dk.naestebus.model.Coordinate;
 import dk.naestebus.model.Departure;
 import dk.naestebus.model.Stop;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.joda.time.ReadableDateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -37,6 +38,7 @@ public final class RejseplanDataSupplier implements DataSupplier {
     private static final String NEARBY_STOPS_URL = "stopsNearby?coordX=%d&coordY=%d&maxRadius=%d&maxNumber=%d";
     private static final String DEPARTURES_URL = "departureBoard?id=%s&date=%s&time=%s&useTog=0&useMetro=0";
 
+    private static final String TIMEZONE_ID = "Europe/Copenhagen";
     private static final String DATE_FORMAT = "dd.MM.yy";
     private static final String TIME_FORMAT = "HH:mm";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern(DATE_FORMAT);
@@ -88,7 +90,7 @@ public final class RejseplanDataSupplier implements DataSupplier {
     public ImmutableList<Departure> getNextDepartures(String stopId) throws IOException {
         final ImmutableList.Builder<Departure> departures = ImmutableList.builder();
 
-        final DateTime now = DateTime.now();
+        final DateTime now = DateTime.now().toDateTime(DateTimeZone.forID(TIMEZONE_ID));
         connectAndParse(BASE_URL + String.format(DEPARTURES_URL, stopId, DATE_FORMATTER.print(now), TIME_FORMATTER.print(now)), new DefaultHandler() {
             @Override
             public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {

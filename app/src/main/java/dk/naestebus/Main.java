@@ -22,7 +22,7 @@ public class Main {
         // Find war file
         File warPath = new File(WAR_PATH);
 
-        log.info("Starting server with war path {}...", warPath.getAbsoluteFile());
+        log.info("Starting server on path {} with war path {}...", new File(".").getAbsolutePath(), warPath.getAbsolutePath());
 
         File[] wars = warPath.listFiles(new FilenameFilter() {
             @Override
@@ -31,7 +31,7 @@ public class Main {
             }
         });
 
-        if (wars.length == 0) {
+        if (wars == null || wars.length == 0) {
             log.error("No war file found, exiting.");
             return;
         }

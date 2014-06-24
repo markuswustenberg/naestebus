@@ -8,10 +8,7 @@ Note: This service only works in Denmark. If you're physically located outside D
 
 # For developers
 
-[![Build Status](https://travis-ci.org/2yxwx/nexthighspeedmetaltube.svg?branch=master)](https://travis-ci.org/2yxwx/nexthighspeedmetaltube)
-[![Build Status](https://travis-ci.org/2yxwx/nexthighspeedmetaltube.svg?branch=develop)](https://travis-ci.org/2yxwx/nexthighspeedmetaltube)
-
-Above: build status for branches `master` and `develop`, respectively.
+[![Build Status](https://travis-ci.org/markuswustenberg/naestebus.svg?branch=master)](https://travis-ci.org/markuswustenberg/naestebus)
 
 To build the code yourself, clone the repository and run `./gradlew build` to test and build, and/or `./gradlew jettyRun` to run the web application locally (on [localhost:8080](http://localhost:8080)). Check the javadocs for usage information of the backend. Note that some tests depend on data from a 3rd party web service, which (however unlikely) may unexpectedly have changed its API.
 

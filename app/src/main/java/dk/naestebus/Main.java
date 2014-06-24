@@ -13,7 +13,7 @@ import java.io.FilenameFilter;
  */
 public class Main {
 
-    public static final String WAR_PATH = "./build/libs/";
+    public static final String WAR_PATH = "build/libs/";
     public static final String WAR_FILE_ENDING = "war";
 
     private static final Logger log = LoggerFactory.getLogger(Main.class);

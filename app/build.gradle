@@ -19,7 +19,7 @@ test.doLast {
 
 dependencies {
     // Servlet API
-    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+    providedCompile 'javax.servlet:servlet-api:2.5'
 
     // All-purpose library
     compile 'com.google.guava:guava:17.0'

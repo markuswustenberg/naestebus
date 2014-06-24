@@ -1,6 +1,7 @@
 package dk.naestebus.datasupplier;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.io.Closer;
 import com.google.inject.Singleton;
 import dk.naestebus.model.Coordinate;
 import dk.naestebus.model.Departure;
@@ -16,12 +17,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -125,19 +124,16 @@ public final class RejseplanDataSupplier implements DataSupplier {
         log.debug("Connecting to {}...", urlAsString);
         URL url = new URL(urlAsString);
         URLConnection connection = url.openConnection();
-        try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream())) {
+        Closer closer = Closer.create();
+        try {
+            BufferedInputStream in = closer.register(new BufferedInputStream(connection.getInputStream()));
             SAXParserFactory parserFactory = SAXParserFactory.newInstance();
             SAXParser parser = parserFactory.newSAXParser();
             parser.parse(in, handler);
-        } catch (MalformedURLException e) {
-            // This should never happen, and is a programming error. Therefore, throw it again as a RuntimeException.
-            throw new RuntimeException(e);
-        } catch (ParserConfigurationException e) {
-            // This likewise should never happen, and is a programming error. Therefore, throw it again as a RuntimeException.
-            throw new RuntimeException(e);
-        } catch (SAXException e) {
-            // Just rethrow as connection error
-            throw new IOException(e);
+        } catch (Throwable e) {
+            throw closer.rethrow(e);
+        } finally {
+            closer.close();
         }
     }
 }

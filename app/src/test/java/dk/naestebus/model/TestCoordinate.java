@@ -1,11 +1,11 @@
-package com.nexthighspeedmetaltube.model;
+package dk.naestebus.model;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests a {@link com.nexthighspeedmetaltube.model.Coordinate}.
+ * Tests a {@link dk.naestebus.model.Coordinate}.
  */
 public class TestCoordinate {
 

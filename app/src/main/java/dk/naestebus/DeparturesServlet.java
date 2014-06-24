@@ -1,11 +1,11 @@
-package com.nexthighspeedmetaltube;
+package dk.naestebus;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.nexthighspeedmetaltube.datasupplier.DataSupplier;
-import com.nexthighspeedmetaltube.model.Departure;
-import com.nexthighspeedmetaltube.serialize.Serializer;
+import dk.naestebus.datasupplier.DataSupplier;
+import dk.naestebus.model.Departure;
+import dk.naestebus.serialize.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * A {@code DeparturesServlet} serves {@link com.nexthighspeedmetaltube.model.Departure}s for a {@link com.nexthighspeedmetaltube.model.Stop}.
+ * A {@code DeparturesServlet} serves {@link dk.naestebus.model.Departure}s for a {@link dk.naestebus.model.Stop}.
  * <p>
  * Retrieve departures using HTTP GET, given the parameters {@code stopId} and {@code max}. The response is in JSON format.
  * <p>

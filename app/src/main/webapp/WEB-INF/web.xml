@@ -14,6 +14,6 @@
     </filter-mapping>
 
     <listener>
-        <listener-class>com.nexthighspeedmetaltube.ServletConfig</listener-class>
+        <listener-class>dk.naestebus.ServletConfig</listener-class>
     </listener>
 </web-app>

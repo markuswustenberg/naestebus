@@ -2,11 +2,12 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'war'
     apply plugin: 'jetty'
+    apply plugin: 'application'
     apply plugin: 'findbugs'
     apply plugin: 'pmd'
     apply plugin: 'checkstyle'
 
-    group 'com.nexthighspeedmetaltube'
+    group 'dk.naestebus'
 
     sourceCompatibility = JavaVersion.VERSION_1_7
     targetCompatibility = JavaVersion.VERSION_1_7
@@ -26,6 +27,8 @@ subprojects {
         configFile = new File(rootDir, 'config/checkstyle/checkstyle.xml')
         ignoreFailures = true;
     }
+
+    task stage(dependsOn: ['clean', 'war', 'installApp'])
 }
 
 task wrapper(type: Wrapper) {

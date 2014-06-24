@@ -1,4 +1,4 @@
-package com.nexthighspeedmetaltube.model;
+package dk.naestebus.model;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Tests all aspects of {@link com.nexthighspeedmetaltube.model.Departure}.
+ * Tests all aspects of {@link dk.naestebus.model.Departure}.
  */
 public class TestDeparture {
 
